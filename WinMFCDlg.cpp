@@ -63,6 +63,7 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON1, &CWinMFCDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -151,3 +152,9 @@ HCURSOR CWinMFCDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CWinMFCDlg::OnBnClickedButton1()
+{
+	// TODO: Add your control notification handler code here
+}
