@@ -157,4 +157,5 @@ HCURSOR CWinMFCDlg::OnQueryDragIcon()
 void CWinMFCDlg::OnBnClickedButton1()
 {
 	// TODO: Add your control notification handler code here
+	MessageBox(L"Message box", L"Caption string", MB_OKCANCEL);
 }
