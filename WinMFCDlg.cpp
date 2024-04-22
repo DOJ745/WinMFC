@@ -1,4 +1,3 @@
-
 // WinMFCDlg.cpp : файл реализации
 //
 
@@ -42,11 +41,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
-
 // диалоговое окно CWinMFCDlg
-
-
-
 
 CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CWinMFCDlg::IDD, pParent)
@@ -153,9 +148,11 @@ HCURSOR CWinMFCDlg::OnQueryDragIcon()
 }
 
 
-
 void CWinMFCDlg::OnBnClickedButton1()
 {
 	// TODO: Add your control notification handler code here
-	MessageBox(L"Message box", L"Caption string", MB_OKCANCEL);
+	//MessageBox(L"Message box", L"Caption string", MB_OKCANCEL);
+	
+	CustomDialog customDialog;
+	customDialog.DoModal();
 }
