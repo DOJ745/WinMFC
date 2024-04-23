@@ -31,12 +31,10 @@ CWinMFCApp::CWinMFCApp()
 
 
 // Единственный объект CWinMFCApp
-
 CWinMFCApp theApp;
 
 
 // инициализация CWinMFCApp
-
 BOOL CWinMFCApp::InitInstance()
 {
 	// InitCommonControlsEx() требуется для Windows XP, если манифест
@@ -91,4 +89,3 @@ BOOL CWinMFCApp::InitInstance()
 	//  приложения вместо запуска генератора сообщений приложения.
 	return FALSE;
 }
-

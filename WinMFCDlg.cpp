@@ -5,16 +5,12 @@
 #include "WinMFC.h"
 #include "WinMFCDlg.h"
 #include "afxdialogex.h"
-#include "CustomDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-
-
 // Диалоговое окно CAboutDlg используется для описания сведений о приложении
-
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -44,9 +40,8 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 // диалоговое окно CWinMFCDlg
-
-CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CWinMFCDlg::IDD, pParent)
+CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/): 
+	CDialogEx(CWinMFCDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -54,6 +49,7 @@ CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/)
 void CWinMFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	//DDX_TextNotEmpty(pDX, IDC_EDIT_DATA, m_string);
 }
 
 BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
@@ -62,7 +58,6 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CWinMFCDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
-
 
 // обработчики сообщений CWinMFCDlg
 
@@ -153,8 +148,4 @@ HCURSOR CWinMFCDlg::OnQueryDragIcon()
 void CWinMFCDlg::OnBnClickedButton1()
 {
 	// TODO: Add your control notification handler code here
-	//MessageBox(L"Message box", L"Caption string", MB_OKCANCEL);
-	
-	CustomDialog customDialog;
-	customDialog.DoModal();
 }

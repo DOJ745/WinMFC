@@ -1,4 +1,3 @@
-
 // WinMFC.h : главный файл заголовка для приложения PROJECT_NAME
 //
 
@@ -10,11 +9,9 @@
 
 #include "resource.h"		// основные символы
 
-
 // CWinMFCApp:
 // О реализации данного класса см. WinMFC.cpp
 //
-
 class CWinMFCApp : public CWinApp
 {
 public:
