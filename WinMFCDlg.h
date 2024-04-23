@@ -12,6 +12,10 @@ public:
 	CustomDialog* m_ptrDialog;
 	CString m_string;
 	CWinMFCDlg(CWnd* pParent = NULL);	// стандартный конструктор
+	virtual ~CWinMFCDlg() 
+	{
+		delete m_ptrDialog;
+	}
 
 // Данные диалогового окна
 	enum { IDD = IDD_WINMFC_DIALOG };
@@ -32,4 +36,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();
+	afx_msg void OnEnUpdateEditData();
+	afx_msg void OnEnChangeEditData();
+	afx_msg void OnBnClickedButton2();
 };

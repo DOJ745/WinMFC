@@ -60,20 +60,3 @@ BOOL CWinMFCApp::InitInstance()
 
 	return FALSE;
 }
-
-void DDX_TextNotEmpty (CDataExchange* pDX, int nIDC, CString& value)
-{
-	HWND hWndCtrl = pDX->PrepareEditCtrl(nIDC);
-	if (pDX->m_bSaveAndValidate)
-	{
-		int nLen = ::GetWindowTextLength(hWndCtrl);
-		::GetWindowText(hWndCtrl, value.GetBufferSetLength(nLen), nLen+1);
-		value.ReleaseBuffer();
-		if (value.IsEmpty ())
-		{
-			AfxMessageBox (_T("Enter something in the text field."), MB_ICONSTOP);
-			pDX->Fail ();	//Fail () sets the focus on to the edit control
-		}
-	}
-	else { ::SetWindowText(hWndCtrl, value); }
-}

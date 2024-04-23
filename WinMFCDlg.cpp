@@ -53,7 +53,7 @@ CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/):
 void CWinMFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_TextNotEmpty(pDX, IDC_EDIT_DATA, m_string);
+	DDX_Text(pDX, IDC_EDIT_DATA, m_string);
 }
 
 BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
@@ -61,6 +61,9 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CWinMFCDlg::OnBnClickedButton1)
+	ON_EN_UPDATE(IDC_EDIT_DATA, &CWinMFCDlg::OnEnUpdateEditData)
+	ON_EN_CHANGE(IDC_EDIT_DATA, &CWinMFCDlg::OnEnChangeEditData)
+	ON_BN_CLICKED(IDC_BUTTON2, &CWinMFCDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -95,8 +98,8 @@ BOOL CWinMFCDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Мелкий значок
 
 	// TODO: добавьте дополнительную инициализацию
-	this->m_ptrDialog = new CustomDialog();
-	this->m_ptrDialog->Create(IDD_CUSTOM_DIALOG, this);
+	m_ptrDialog = new CustomDialog();
+	m_ptrDialog->Create(IDD_CUSTOM_DIALOG, this);
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -152,8 +155,46 @@ HCURSOR CWinMFCDlg::OnQueryDragIcon()
 
 void CWinMFCDlg::OnBnClickedButton1()
 {
-	UpdateData(TRUE);
 	// Modeless dialog
-	m_ptrDialog->SetDlgItemTextW(IDC_STATIC, m_string);
 	m_ptrDialog->ShowWindow(SW_SHOW);
+}
+
+// UpdateData(FALSE) means variables->controls, 
+// while UpdateData(TRUE) means controls->variables - includes "validation"
+
+void CWinMFCDlg::OnEnUpdateEditData()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function to send the EM_SETEVENTMASK message to the control
+	// with the ENM_UPDATE flag ORed into the lParam mask.
+
+	// TODO:  Add your control notification handler code here
+	//UpdateData(TRUE);
+	//m_ptrDialog->SetDlgItemTextW(IDC_STATIC, m_string);
+}
+
+
+void CWinMFCDlg::OnEnChangeEditData()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+	UpdateData(TRUE);
+	m_ptrDialog->SetDlgItemTextW(IDC_STATIC, m_string);
+}
+
+void CWinMFCDlg::OnBnClickedButton2()
+{
+	// TODO: Add your control notification handler code here
+	for (int i = 0; i < 10; i++)
+	{
+		Sleep(1000);
+		m_string += "VALUE\n";
+		m_ptrDialog->SetDlgItemTextW(IDC_STATIC, m_string);
+	}
+	UpdateData(FALSE);
 }

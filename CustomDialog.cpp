@@ -18,7 +18,6 @@ CustomDialog::~CustomDialog()
 void CustomDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//DDX_TextNotEmpty(pDX, IDC_EDIT_DATA, m_string);
 }
 
 
