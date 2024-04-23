@@ -19,7 +19,6 @@ END_MESSAGE_MAP()
 
 
 // создание CWinMFCApp
-
 CWinMFCApp::CWinMFCApp()
 {
 	// поддержка диспетчера перезагрузки
