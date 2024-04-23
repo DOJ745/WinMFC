@@ -5,6 +5,7 @@
 #include "WinMFC.h"
 #include "WinMFCDlg.h"
 #include "afxdialogex.h"
+#include "CustomDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -149,4 +150,13 @@ HCURSOR CWinMFCDlg::OnQueryDragIcon()
 void CWinMFCDlg::OnBnClickedButton1()
 {
 	// TODO: Add your control notification handler code here
+
+	// Modal dialog
+	//CustomDialog customDialog;
+	//customDialog.DoModal();
+
+	// Modeless dialog
+	CustomDialog *pDlg = new CustomDialog();
+	pDlg->Create(IDD_CUSTOM_DIALOG, this);
+	pDlg->ShowWindow(SW_SHOW);
 }
