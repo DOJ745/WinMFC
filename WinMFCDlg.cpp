@@ -5,10 +5,12 @@
 #include "WinMFC.h"
 #include "WinMFCDlg.h"
 #include "afxdialogex.h"
+#include "CustomDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
 
 
 // Диалоговое окно CAboutDlg используется для описания сведений о приложении

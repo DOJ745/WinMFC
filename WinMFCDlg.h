@@ -1,9 +1,7 @@
-
 // WinMFCDlg.h : файл заголовка
 //
 
 #pragma once
-
 
 // диалоговое окно CWinMFCDlg
 class CWinMFCDlg : public CDialogEx
