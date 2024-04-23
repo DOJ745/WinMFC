@@ -25,10 +25,3 @@ void CustomDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
-
-
-BEGIN_MESSAGE_MAP(CustomDialog, CDialogEx)
-END_MESSAGE_MAP()
-
-
-// обработчики сообщений CustomDialog
