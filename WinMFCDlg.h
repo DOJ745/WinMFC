@@ -2,12 +2,15 @@
 //
 
 #pragma once
+#include "CustomDialog.h"
 
 // диалоговое окно CWinMFCDlg
 class CWinMFCDlg : public CDialogEx
 {
 // Создание
 public:
+	CustomDialog* m_ptrDialog;
+	CString m_string;
 	CWinMFCDlg(CWnd* pParent = NULL);	// стандартный конструктор
 
 // Данные диалогового окна

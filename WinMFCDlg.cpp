@@ -43,7 +43,9 @@ END_MESSAGE_MAP()
 
 // диалоговое окно CWinMFCDlg
 CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/): 
-	CDialogEx(CWinMFCDlg::IDD, pParent)
+	CDialogEx(CWinMFCDlg::IDD, pParent), 
+	m_string(_T("default")),
+	m_ptrDialog(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -51,7 +53,7 @@ CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/):
 void CWinMFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	//DDX_TextNotEmpty(pDX, IDC_EDIT_DATA, m_string);
+	DDX_TextNotEmpty(pDX, IDC_EDIT_DATA, m_string);
 }
 
 BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
@@ -93,6 +95,8 @@ BOOL CWinMFCDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Мелкий значок
 
 	// TODO: добавьте дополнительную инициализацию
+	this->m_ptrDialog = new CustomDialog();
+	this->m_ptrDialog->Create(IDD_CUSTOM_DIALOG, this);
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -146,17 +150,10 @@ HCURSOR CWinMFCDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
 void CWinMFCDlg::OnBnClickedButton1()
 {
-	// TODO: Add your control notification handler code here
-
-	// Modal dialog
-	//CustomDialog customDialog;
-	//customDialog.DoModal();
-
+	UpdateData(TRUE);
 	// Modeless dialog
-	CustomDialog *pDlg = new CustomDialog();
-	pDlg->Create(IDD_CUSTOM_DIALOG, this);
-	pDlg->ShowWindow(SW_SHOW);
+	m_ptrDialog->SetDlgItemTextW(IDC_STATIC, m_string);
+	m_ptrDialog->ShowWindow(SW_SHOW);
 }
