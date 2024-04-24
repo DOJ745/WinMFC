@@ -10,7 +10,7 @@ using namespace std;
 IMPLEMENT_DYNAMIC(CustomDialog, CDialog)
 
 CustomDialog::CustomDialog(CWnd* pParent /*=NULL*/)
-	: CDialog(CustomDialog::IDD, pParent), m_string(_T("DEFAULT"))
+	: CDialog(CustomDialog::IDD, pParent)
 {
 
 }
@@ -22,13 +22,14 @@ CustomDialog::~CustomDialog()
 void CustomDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_PUT_DATA, m_string);
 }
 
 void writeTextInFile(CustomDialog* dlg)
 {
+	CString str;
 	time_t currentTime = time(0);
 	tm* now = localtime(&currentTime);
+	dlg->GetDlgItemTextW(IDC_PUT_DATA, str);
 	CString formattedLog;
 	formattedLog.Format(L"%d-%d-%d %d:%d:%d      %s",
 		now->tm_mday, 
@@ -37,7 +38,7 @@ void writeTextInFile(CustomDialog* dlg)
 		now->tm_hour,
 		now->tm_min,
 		now->tm_sec,
-		dlg->m_string);
+		str);
 	CStringA log(formattedLog);
 
 	ofstream out("LOG-FILE.txt", ios::app);

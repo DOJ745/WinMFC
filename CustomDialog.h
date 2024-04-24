@@ -5,7 +5,6 @@ class CustomDialog : public CDialog
 	DECLARE_DYNAMIC(CustomDialog)
 
 public:
-	CString m_string;
 	CustomDialog(CWnd* pParent = NULL);
 	virtual ~CustomDialog();
 

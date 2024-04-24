@@ -162,6 +162,7 @@ void CWinMFCDlg::OnBnClickedButton1()
 // UpdateData(FALSE) means variables->controls, 
 // while UpdateData(TRUE) means controls->variables - includes "validation"
 
+// About to display
 void CWinMFCDlg::OnEnUpdateEditData()
 {
 	// TODO:  If this is a RICHEDIT control, the control will not
@@ -171,10 +172,10 @@ void CWinMFCDlg::OnEnUpdateEditData()
 
 	// TODO:  Add your control notification handler code here
 	//UpdateData(TRUE);
-	//m_ptrDialog->SetDlgItemTextW(IDC_STATIC, m_string);
+	//m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
 }
 
-
+// Display is updated after text changed
 void CWinMFCDlg::OnEnChangeEditData()
 {
 	// TODO:  If this is a RICHEDIT control, the control will not
@@ -190,7 +191,8 @@ void CWinMFCDlg::OnEnChangeEditData()
 void CWinMFCDlg::OnBnClickedButton2()
 {
 	// TODO: Add your control notification handler code here
-	for (int i = 0; i < 5; i++)
+	
+	for (int i = 0; i < 3; i++)
 	{
 		Sleep(500);
 		m_string += "VALUE\n";
