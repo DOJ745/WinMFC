@@ -184,7 +184,7 @@ void CWinMFCDlg::OnEnChangeEditData()
 
 	// TODO:  Add your control notification handler code here
 	UpdateData(TRUE);
-	m_ptrDialog->SetDlgItemTextW(IDC_STATIC, m_string);
+	m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
 }
 
 void CWinMFCDlg::OnBnClickedButton2()
@@ -194,7 +194,7 @@ void CWinMFCDlg::OnBnClickedButton2()
 	{
 		Sleep(1000);
 		m_string += "VALUE\n";
-		m_ptrDialog->SetDlgItemTextW(IDC_STATIC, m_string);
+		m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
 	}
 	UpdateData(FALSE);
 }
