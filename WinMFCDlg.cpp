@@ -192,10 +192,10 @@ void CWinMFCDlg::OnBnClickedButton2()
 {
 	// TODO: Add your control notification handler code here
 	
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		Sleep(500);
-		m_string += "VALUE\n";
+		Sleep(300);
+		m_string += "VALUE";
 		m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
 	}
 	UpdateData(FALSE);
