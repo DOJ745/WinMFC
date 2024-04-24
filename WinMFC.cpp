@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include "WinMFC.h"
 #include "WinMFCDlg.h"
@@ -6,7 +5,6 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
 
 // CWinMFCApp
 BEGIN_MESSAGE_MAP(CWinMFCApp, CWinApp)
