@@ -3,6 +3,7 @@
 #include "CustomDialog.h"
 #include "afxdialogex.h"
 #include <fstream>
+#include <ctime>
 
 using namespace std;
 
@@ -26,11 +27,23 @@ void CustomDialog::DoDataExchange(CDataExchange* pDX)
 
 void writeTextInFile(CustomDialog* dlg)
 {
-	CStringA str(LPCTSTR(dlg->m_string));
+	time_t currentTime = time(0);
+	tm* now = localtime(&currentTime);
+	CString formattedLog;
+	formattedLog.Format(L"%d-%d-%d %d:%d:%d      %s",
+		now->tm_mday, 
+		now->tm_mon + 1, 
+		now->tm_year + 1900,
+		now->tm_hour,
+		now->tm_min,
+		now->tm_sec,
+		dlg->m_string);
+	CStringA log(formattedLog);
+
 	ofstream out("LOG-FILE.txt", ios::app);
 	if (out.is_open())
 	{
-		out << str << endl;
+		out << log << endl;
 	}
 	out.close();
 }
