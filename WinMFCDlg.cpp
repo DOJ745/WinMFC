@@ -188,14 +188,52 @@ void CWinMFCDlg::OnEnChangeEditData()
 	m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
 }
 
+void formatData2(int dataToFormat, CString& str)
+{
+	if (dataToFormat <= 9) str.Format(L"0%d", dataToFormat);
+	else str.Format(L"%d", dataToFormat);
+}
+
+CString formLog()
+{
+	time_t currentTime = time(0);
+	tm* now = localtime(&currentTime);
+
+	CString day;
+	CString month;
+	CString hours;
+	CString minutes;
+	CString seconds;
+
+	formatData2(now->tm_mday, day);
+	formatData2(now->tm_mon, month);
+
+	if (now->tm_mon + 1 <= 9) month.Format(L"0%d", now->tm_mon + 1);
+	else month.Format(L"%d", now->tm_mon + 1);
+
+	formatData2(now->tm_hour, hours);
+	formatData2(now->tm_min, minutes);
+	formatData2(now->tm_sec, seconds);
+
+	CString formattedLog;
+	formattedLog.Format(L"\n%s-%s-%d %s:%s:%s\n",
+		day,
+		month,
+		now->tm_year + 1900,
+		hours,
+		minutes,
+		seconds);
+
+	return formattedLog;
+}
+
 void CWinMFCDlg::OnBnClickedButton2()
 {
 	// TODO: Add your control notification handler code here
-	
 	for (int i = 0; i < 10; i++)
 	{
-		Sleep(300);
-		m_string += "VALUE";
+		Sleep(1000);
+		m_string += formLog();
 		m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
 	}
 	UpdateData(FALSE);
