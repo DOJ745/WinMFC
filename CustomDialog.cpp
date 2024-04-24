@@ -24,21 +24,45 @@ void CustomDialog::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 }
 
+void formatData(int dataToFormat, CString& str)
+{
+	if (dataToFormat <= 9) str.Format(L"0%d", dataToFormat);
+	else str.Format(L"%d", dataToFormat);
+}
+
 void writeTextInFile(CustomDialog* dlg)
 {
 	CString str;
+	dlg->GetDlgItemTextW(IDC_PUT_DATA, str);
+
 	time_t currentTime = time(0);
 	tm* now = localtime(&currentTime);
-	dlg->GetDlgItemTextW(IDC_PUT_DATA, str);
+
+	CString day;
+	CString month;
+	CString hours;
+	CString minutes;
+	CString seconds;
+
+	formatData(now->tm_mday, day);
+	formatData(now->tm_mon, month);
+	formatData(now->tm_hour, hours);
+	formatData(now->tm_min, minutes);
+	formatData(now->tm_sec, seconds);
+
+	if (now->tm_mon + 1 <= 9) month.Format(L"0%d", now->tm_mon + 1);
+	else month.Format(L"%d", now->tm_mon + 1);
+
 	CString formattedLog;
-	formattedLog.Format(L"%d-%d-%d %d:%d:%d      %s",
-		now->tm_mday, 
-		now->tm_mon + 1, 
+	formattedLog.Format(L"%s-%s-%d %s:%s:%s      %s",
+		day, 
+		month, 
 		now->tm_year + 1900,
-		now->tm_hour,
-		now->tm_min,
-		now->tm_sec,
+		hours,
+		minutes,
+		seconds,
 		str);
+
 	CStringA log(formattedLog);
 
 	ofstream out("LOG-FILE.txt", ios::app);
