@@ -6,7 +6,6 @@
 
 #include "resource.h"
 
-void DDX_TextNotEmpty (CDataExchange* pDX, int nIDC, CString& value);
 class CWinMFCApp : public CWinApp
 {
 public:
