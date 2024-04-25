@@ -142,6 +142,7 @@ void CustomDialog::OnDestroy()
 
 void CustomDialog::ChangeMember(CString str)
 {
+	UpdateData();
 	for (int i = 0; i < 5; i++)
 	{
 		Sleep(500);

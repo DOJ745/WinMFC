@@ -1,6 +1,5 @@
 // WinMFCDlg.cpp : файл реализации
 //
-
 #include "stdafx.h"
 #include "WinMFC.h"
 #include "WinMFCDlg.h"
@@ -230,6 +229,7 @@ CString formLog()
 void CWinMFCDlg::OnBnClickedButton2()
 {
 	// TODO: Add your control notification handler code here
+	UpdateData();
 	for (int i = 0; i < 5; i++)
 	{
 		Sleep(500);
