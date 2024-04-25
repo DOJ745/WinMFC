@@ -4,6 +4,7 @@
 #include "afxdialogex.h"
 #include <fstream>
 #include <ctime>
+#include <iostream>
 
 using namespace std;
 
@@ -11,17 +12,17 @@ IMPLEMENT_DYNAMIC(CustomDialog, CDialog)
 
 CustomDialog::CustomDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CustomDialog::IDD, pParent)
+	, m_editText(_T("empty"))
 {
 
 }
 
-CustomDialog::~CustomDialog()
-{
-}
+CustomDialog::~CustomDialog(){}
 
 void CustomDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_CUSTOM_DIALOG_EDIT, m_editText);
 }
 
 void formatData(int dataToFormat, CString& str)
@@ -77,13 +78,16 @@ BEGIN_MESSAGE_MAP(CustomDialog, CDialog)
 	ON_BN_CLICKED(IDOK, &CustomDialog::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CustomDialog::OnBnClickedCancel)
 	ON_WM_CLOSE()
+	ON_EN_UPDATE(IDC_CUSTOM_DIALOG_EDIT, &CustomDialog::OnEnUpdateCustomDialogEdit)
+	ON_EN_CHANGE(IDC_CUSTOM_DIALOG_EDIT, &CustomDialog::OnEnChangeCustomDialogEdit)
+	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 void CustomDialog::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
-	writeTextInFile(this);
+	//writeTextInFile(this);
 	CDialog::OnOK();
 }
 
@@ -92,7 +96,7 @@ void CustomDialog::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
-	writeTextInFile(this);
+	//writeTextInFile(this);
 	CDialog::OnCancel();
 }
 
@@ -101,6 +105,48 @@ void CustomDialog::OnClose()
 {
 	// TODO: Add your message handler code here and/or call default
 	UpdateData(TRUE);
-	writeTextInFile(this);
+	//writeTextInFile(this);
 	CDialog::OnClose();
+}
+
+void CustomDialog::OnEnUpdateCustomDialogEdit()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function to send the EM_SETEVENTMASK message to the control
+	// with the ENM_UPDATE flag ORed into the lParam mask.
+
+	// TODO:  Add your control notification handler code here
+}
+
+
+void CustomDialog::OnEnChangeCustomDialogEdit()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+}
+
+
+void CustomDialog::OnDestroy()
+{
+	// TODO: Add your message handler code here
+	UpdateData(TRUE);
+	writeTextInFile(this);
+	CDialog::OnDestroy();
+}
+
+
+void CustomDialog::ChangeMember(CString str)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		Sleep(500);
+		m_editText += str;
+		SetDlgItemTextW(IDC_CUSTOM_DIALOG_EDIT, m_editText);
+	}
+	UpdateData(FALSE);
 }

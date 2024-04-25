@@ -64,6 +64,7 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_EN_UPDATE(IDC_EDIT_DATA, &CWinMFCDlg::OnEnUpdateEditData)
 	ON_EN_CHANGE(IDC_EDIT_DATA, &CWinMFCDlg::OnEnChangeEditData)
 	ON_BN_CLICKED(IDC_BUTTON2, &CWinMFCDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON3, &CWinMFCDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -171,8 +172,6 @@ void CWinMFCDlg::OnEnUpdateEditData()
 	// with the ENM_UPDATE flag ORed into the lParam mask.
 
 	// TODO:  Add your control notification handler code here
-	//UpdateData(TRUE);
-	//m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
 }
 
 // Display is updated after text changed
@@ -186,6 +185,7 @@ void CWinMFCDlg::OnEnChangeEditData()
 	// TODO:  Add your control notification handler code here
 	UpdateData(TRUE);
 	m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
+	m_ptrDialog->SetDlgItemTextW(IDC_CUSTOM_DIALOG_EDIT, m_string);
 }
 
 void formatData2(int dataToFormat, CString& str)
@@ -230,11 +230,17 @@ CString formLog()
 void CWinMFCDlg::OnBnClickedButton2()
 {
 	// TODO: Add your control notification handler code here
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		Sleep(1000);
+		Sleep(500);
 		m_string += formLog();
 		m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
 	}
 	UpdateData(FALSE);
+}
+
+
+void CWinMFCDlg::OnBnClickedButton3()
+{
+	m_ptrDialog->ChangeMember(L"Hello");
 }
