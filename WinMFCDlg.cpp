@@ -153,12 +153,6 @@ HCURSOR CWinMFCDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CWinMFCDlg::OnBnClickedButton1()
-{
-	// Modeless dialog
-	m_ptrDialog->ShowWindow(SW_SHOW);
-}
-
 // UpdateData(FALSE) means variables->controls, 
 // while UpdateData(TRUE) means controls->variables - includes "validation"
 
@@ -226,6 +220,23 @@ CString formLog()
 	return formattedLog;
 }
 
+
+void CWinMFCDlg::OnBnClickedButton1()
+{
+	// Modeless dialog
+	CRect customDialogRect;
+	m_ptrDialog->GetWindowRect(customDialogRect);
+
+	m_ptrDialog->SetWindowPos(
+		AfxGetMainWnd(), 
+		1200, 
+		100, 
+		customDialogRect.Width(),
+		customDialogRect.Height(),
+		SWP_SHOWWINDOW
+		);
+}
+
 void CWinMFCDlg::OnBnClickedButton2()
 {
 	// TODO: Add your control notification handler code here
@@ -242,5 +253,6 @@ void CWinMFCDlg::OnBnClickedButton2()
 
 void CWinMFCDlg::OnBnClickedButton3()
 {
-	m_ptrDialog->ChangeMember(L"Hello");
+	//m_ptrDialog->ChangeMember(L"Hello");
+	SetDlgItemTextW(IDC_CUSTOM_DIALOG_EDIT, L"Hello");
 }

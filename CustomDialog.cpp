@@ -85,28 +85,29 @@ END_MESSAGE_MAP()
 
 void CustomDialog::OnBnClickedOk()
 {
+	CDialog::OnOK();
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
-	//writeTextInFile(this);
-	CDialog::OnOK();
+	writeTextInFile(this);
+	
 }
 
 
 void CustomDialog::OnBnClickedCancel()
 {
+	CDialog::OnCancel();
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
-	//writeTextInFile(this);
-	CDialog::OnCancel();
+	writeTextInFile(this);
 }
 
 
 void CustomDialog::OnClose()
 {
+	CDialog::OnClose();
 	// TODO: Add your message handler code here and/or call default
 	UpdateData(TRUE);
-	//writeTextInFile(this);
-	CDialog::OnClose();
+	writeTextInFile(this);
 }
 
 void CustomDialog::OnEnUpdateCustomDialogEdit()
@@ -133,10 +134,10 @@ void CustomDialog::OnEnChangeCustomDialogEdit()
 
 void CustomDialog::OnDestroy()
 {
+	CDialog::OnDestroy();
 	// TODO: Add your message handler code here
 	UpdateData(TRUE);
 	writeTextInFile(this);
-	CDialog::OnDestroy();
 }
 
 
