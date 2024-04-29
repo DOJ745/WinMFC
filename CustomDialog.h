@@ -5,7 +5,6 @@ class CustomDialog : public CDialog
 	DECLARE_DYNAMIC(CustomDialog)
 
 public:
-	CString m_editText;
 	CustomDialog(CWnd* pParent = NULL);
 	virtual ~CustomDialog();
 
@@ -23,5 +22,4 @@ public:
 	afx_msg void OnEnChangeCustomDialogEdit();
 
 	afx_msg void OnDestroy();
-	void ChangeMember(CString str);
 };
