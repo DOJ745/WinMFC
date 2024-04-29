@@ -178,7 +178,6 @@ void CWinMFCDlg::OnEnChangeEditData()
 	// TODO:  Add your control notification handler code here
 	UpdateData(TRUE);
 	m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
-	m_ptrDialog->SetDlgItemTextW(IDC_CUSTOM_DIALOG_EDIT, m_string);
 }
 
 void formatData2(int dataToFormat, CString& str)
@@ -240,8 +239,7 @@ void CWinMFCDlg::OnBnClickedButton1()
 void CWinMFCDlg::OnBnClickedButton2()
 {
 	// TODO: Add your control notification handler code here
-	UpdateData();
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		Sleep(500);
 		m_string += formLog();
@@ -253,6 +251,5 @@ void CWinMFCDlg::OnBnClickedButton2()
 
 void CWinMFCDlg::OnBnClickedButton3()
 {
-	//m_ptrDialog->ChangeMember(L"Hello");
-	SetDlgItemTextW(IDC_CUSTOM_DIALOG_EDIT, L"Hello");
+	//m_ptrDialog->ChangeMember(L"\nHello\n");
 }

@@ -79,24 +79,6 @@ BEGIN_MESSAGE_MAP(CustomDialog, CDialog)
 	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
-void CustomDialog::OnBnClickedOk()
-{
-	CDialog::OnOK();
-	// TODO: Add your control notification handler code here
-	UpdateData(TRUE);
-	writeTextInFile(this);
-	
-}
-
-void CustomDialog::OnBnClickedCancel()
-{
-	CDialog::OnCancel();
-	// TODO: Add your control notification handler code here
-	UpdateData(TRUE);
-	writeTextInFile(this);
-}
-
-
 void CustomDialog::OnClose()
 {
 	CDialog::OnClose();

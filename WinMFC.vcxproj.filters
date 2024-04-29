@@ -22,6 +22,9 @@
     <None Include="res\WinMFC.ico">
       <Filter>Файлы ресурсов</Filter>
     </None>
+    <None Include="res\afx_dial.bin">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMFC.h">

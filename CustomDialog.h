@@ -15,11 +15,6 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedOk();
-	afx_msg void OnBnClickedCancel();
 	afx_msg void OnClose();
-	afx_msg void OnEnUpdateCustomDialogEdit();
-	afx_msg void OnEnChangeCustomDialogEdit();
-
 	afx_msg void OnDestroy();
 };
