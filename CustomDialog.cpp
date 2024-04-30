@@ -13,13 +13,8 @@ IMPLEMENT_DYNAMIC(CustomDialog, CDialog)
 CustomDialog::CustomDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CustomDialog::IDD, pParent), 
 	m_putData(CStatic()),
-	m_listBox(CListBox()),
-	m_listCtrl(CListCtrl())
+	m_listBox(CListBox())
 {
-	m_listCtrl.InsertColumn(0, L"TEST");
-	m_listCtrl.SetColumnWidth(0, 80);
-	m_listCtrl.InsertColumn(1, L"TEST-2");
-	m_listCtrl.SetColumnWidth(1, 80);
 }
 
 CustomDialog::~CustomDialog(){}
@@ -29,7 +24,6 @@ void CustomDialog::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PUT_DATA, m_putData);
 	DDX_Control(pDX, IDC_LIST1, m_listBox);
-	DDX_Control(pDX, IDC_LIST2, m_listCtrl);
 }
 
 void formatData(int dataToFormat, CString& str)

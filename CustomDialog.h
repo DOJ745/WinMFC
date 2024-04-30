@@ -8,7 +8,6 @@ class CustomDialog : public CDialog
 private:
 	CStatic m_putData;
 	CListBox m_listBox;
-	CListCtrl m_listCtrl;
 
 public:
 	CustomDialog(CWnd* pParent = NULL);
