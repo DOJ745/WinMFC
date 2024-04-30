@@ -11,9 +11,15 @@ using namespace std;
 IMPLEMENT_DYNAMIC(CustomDialog, CDialog)
 
 CustomDialog::CustomDialog(CWnd* pParent /*=NULL*/)
-	: CDialog(CustomDialog::IDD, pParent)
+	: CDialog(CustomDialog::IDD, pParent), 
+	m_putData(CStatic()),
+	m_listBox(CListBox()),
+	m_listCtrl(CListCtrl())
 {
-
+	m_listCtrl.InsertColumn(0, L"TEST");
+	m_listCtrl.SetColumnWidth(0, 80);
+	m_listCtrl.InsertColumn(1, L"TEST-2");
+	m_listCtrl.SetColumnWidth(1, 80);
 }
 
 CustomDialog::~CustomDialog(){}
@@ -21,6 +27,9 @@ CustomDialog::~CustomDialog(){}
 void CustomDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_PUT_DATA, m_putData);
+	DDX_Control(pDX, IDC_LIST1, m_listBox);
+	DDX_Control(pDX, IDC_LIST2, m_listCtrl);
 }
 
 void formatData(int dataToFormat, CString& str)
@@ -73,10 +82,10 @@ void writeTextInFile(CustomDialog* dlg)
 }
 
 BEGIN_MESSAGE_MAP(CustomDialog, CDialog)
-	ON_BN_CLICKED(IDOK, &CustomDialog::OnBnClickedOk)
-	ON_BN_CLICKED(IDCANCEL, &CustomDialog::OnBnClickedCancel)
 	ON_WM_CLOSE()
 	ON_WM_DESTROY()
+	ON_WM_VSCROLL()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 void CustomDialog::OnClose()
@@ -93,4 +102,30 @@ void CustomDialog::OnDestroy()
 	// TODO: Add your message handler code here
 	UpdateData(TRUE);
 	writeTextInFile(this);
+}
+
+void CustomDialog::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	CDialog::OnVScroll(nSBCode, nPos, pScrollBar);
+}
+
+void CustomDialog::OnSize(UINT nType, int cx, int cy)
+{
+	CDialog::OnSize(nType, cx, cy);
+	//m_putData.SetWindowPos(
+	m_listBox.SetWindowPos(
+		nullptr, 
+		0, 
+		0,
+		cx < 150 ? 150 : cx - 20,
+		cy < 200 ? 200 : cy - 20,
+		SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
+}
+
+void CustomDialog::AddData(CString str)
+{
+	UpdateWindow();
+	m_listBox.AddString(str);
 }
