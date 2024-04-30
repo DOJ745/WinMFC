@@ -99,7 +99,7 @@ BOOL CWinMFCDlg::OnInitDialog()
 
 	// TODO: добавьте дополнительную инициализацию
 	m_ptrDialog = new CustomDialog();
-	m_ptrDialog->Create(IDD_CUSTOM_DIALOG, this);
+	m_ptrDialog->Create(IDD_CUSTOM_DIALOG, GetSafeOwner());
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
