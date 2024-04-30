@@ -241,9 +241,9 @@ void CWinMFCDlg::OnBnClickedButton2()
 	// TODO: Add your control notification handler code here
 	for (int i = 0; i < 10; i++)
 	{
-		Sleep(500);
 		m_string += formLog();
 		m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
+		Sleep(400);
 	}
 	UpdateData(FALSE);
 }
@@ -251,5 +251,9 @@ void CWinMFCDlg::OnBnClickedButton2()
 
 void CWinMFCDlg::OnBnClickedButton3()
 {
-	//m_ptrDialog->ChangeMember(L"\nHello\n");
+	for (int i = 0; i < 5; i++)
+	{
+		m_ptrDialog->AddData(formLog());
+		Sleep(250);
+	}
 }
