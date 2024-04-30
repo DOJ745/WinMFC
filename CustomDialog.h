@@ -8,6 +8,7 @@ class CustomDialog : public CDialog
 private:
 	CStatic m_putData;
 	CListBox m_listBox;
+	CListCtrl m_listCtrl;
 
 public:
 	CustomDialog(CWnd* pParent = NULL);
@@ -17,6 +18,7 @@ public:
 	enum { IDD = IDD_CUSTOM_DIALOG };
 
 protected:
+	virtual BOOL OnInitDialog();
 	virtual void DoDataExchange(CDataExchange* pDX);
 	DECLARE_MESSAGE_MAP()
 public:
