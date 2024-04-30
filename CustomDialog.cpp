@@ -13,17 +13,31 @@ IMPLEMENT_DYNAMIC(CustomDialog, CDialog)
 CustomDialog::CustomDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CustomDialog::IDD, pParent), 
 	m_putData(CStatic()),
-	m_listBox(CListBox())
-{
-}
+	m_listCtrl(CListCtrl())
+{}
 
 CustomDialog::~CustomDialog(){}
+
+BOOL CustomDialog::OnInitDialog()
+{
+	CDialog::OnInitDialog();
+
+	m_listCtrl.InsertColumn(0, L"Date");
+	m_listCtrl.SetColumnWidth(0, 200);
+	m_listCtrl.InsertColumn(1, L"Time");
+	m_listCtrl.SetColumnWidth(1, 200);
+	m_listCtrl.InsertColumn(1, L"Time");
+	m_listCtrl.SetColumnWidth(1, 200);
+
+	return TRUE;
+}
 
 void CustomDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PUT_DATA, m_putData);
 	DDX_Control(pDX, IDC_LIST1, m_listBox);
+	DDX_Control(pDX, IDC_CUSTOM_DIALOG_LIST_CTRL, m_listCtrl);
 }
 
 void formatData(int dataToFormat, CString& str)
@@ -101,7 +115,6 @@ void CustomDialog::OnDestroy()
 void CustomDialog::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	// TODO: Add your message handler code here and/or call default
-
 	CDialog::OnVScroll(nSBCode, nPos, pScrollBar);
 }
 
@@ -109,13 +122,16 @@ void CustomDialog::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);
 	//m_putData.SetWindowPos(
-	m_listBox.SetWindowPos(
-		nullptr, 
-		0, 
-		0,
-		cx < 150 ? 150 : cx - 20,
-		cy < 200 ? 200 : cy - 20,
-		SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
+	/*if (m_listBox.GetSafeHwnd())
+	{
+		m_listBox.SetWindowPos(
+			m_listBox.GetSafeOwner(),
+			0,
+			0,
+			cx < 150 ? 150 : cx - 20,
+			cy < 200 ? 200 : cy - 20,
+			SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER);
+	}*/
 }
 
 void CustomDialog::AddData(CString str)
