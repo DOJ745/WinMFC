@@ -1,5 +1,6 @@
 #pragma once
 #include "afxwin.h"
+#include "MyCMFCListCtrl.h"
 
 class CustomDialog : public CDialog
 {
@@ -8,7 +9,7 @@ class CustomDialog : public CDialog
 private:
 	CStatic m_putData;
 	CListBox m_listBox;
-	CListCtrl m_listCtrl;
+	MyCMFCListCtrl m_listCtrl;
 
 public:
 	CustomDialog(CWnd* pParent = NULL);

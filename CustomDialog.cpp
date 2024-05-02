@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "WinMFC.h"
 #include "CustomDialog.h"
+#include "MyCMFCListCtrl.h"
 #include "afxdialogex.h"
 #include <fstream>
 #include <ctime>
@@ -13,21 +14,51 @@ IMPLEMENT_DYNAMIC(CustomDialog, CDialog)
 CustomDialog::CustomDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CustomDialog::IDD, pParent), 
 	m_putData(CStatic()),
-	m_listCtrl(CListCtrl())
+	m_listCtrl(MyCMFCListCtrl())
 {}
 
 CustomDialog::~CustomDialog(){}
+
+/*int CMFCListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int nColumn)
+{
+	int nCol_1;             ///<
+	int nCol_2;             ///<
+	CString strCol_1;           ///<
+	CString strCol_2;           ///<
+
+	strCol_1 = CListCtrl::GetItemText(lParam1, nColumn);
+	strCol_2 = CListCtrl::GetItemText(lParam2, nColumn);
+	switch (nColumn)
+	{
+	case 2:
+		return strCol_1.Compare(strCol_2);
+	}
+}*/
+
 
 BOOL CustomDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	m_listCtrl.InsertColumn(0, L"Date");
-	m_listCtrl.SetColumnWidth(0, 200);
-	m_listCtrl.InsertColumn(1, L"Time");
-	m_listCtrl.SetColumnWidth(1, 200);
-	m_listCtrl.InsertColumn(1, L"Time");
-	m_listCtrl.SetColumnWidth(1, 200);
+	m_listCtrl.InsertColumn(0, L"Date", 0, 200);
+	m_listCtrl.InsertColumn(1, L"Time", 1, 200);
+	m_listCtrl.InsertColumn(2, L"Log", 2, 200);
+
+	for (int i = 0; i < 10; i++)
+	{
+		CString str;
+		str.Format(_T("%d"), i);
+		//int nIndex = m_listCtrl.InsertItem(i, _T("25-05-2024"));
+		///m_listCtrl.SetItemText(nIndex, 1, _T("14:54:01"));
+		int nIndex = m_listCtrl.InsertItem(i, str);
+		m_listCtrl.SetItemText(nIndex, 1, _T("b"));
+		m_listCtrl.SetItemText(nIndex, 2, str);
+		
+	}
+	
+	//m_listCtrl.SetSortColumn(0, FALSE, FALSE);
+	//m_listCtrl.EnableMarkSortedColumn(TRUE, TRUE);
+	//m_listCtrl.Sort(2, FALSE, FALSE);
 
 	return TRUE;
 }
