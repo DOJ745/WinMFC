@@ -35,7 +35,6 @@ CustomDialog::~CustomDialog(){}
 	}
 }*/
 
-
 BOOL CustomDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
@@ -46,19 +45,18 @@ BOOL CustomDialog::OnInitDialog()
 
 	for (int i = 0; i < 10; i++)
 	{
-		CString str;
-		str.Format(_T("%d"), i);
-		//int nIndex = m_listCtrl.InsertItem(i, _T("25-05-2024"));
-		///m_listCtrl.SetItemText(nIndex, 1, _T("14:54:01"));
-		int nIndex = m_listCtrl.InsertItem(i, str);
-		m_listCtrl.SetItemText(nIndex, 1, _T("b"));
-		m_listCtrl.SetItemText(nIndex, 2, str);
+		CString number, date;
+		number.Format(_T("%d"), i);
+		date.Format(_T("25-05-202%d"), i);
+
+		int nIndex = m_listCtrl.InsertItem(i, date);
+		m_listCtrl.SetItemText(nIndex, 1, _T("14:54:01"));
+		m_listCtrl.SetItemText(nIndex, 2, number);
 		
 	}
 	
-	//m_listCtrl.SetSortColumn(0, FALSE, FALSE);
-	//m_listCtrl.EnableMarkSortedColumn(TRUE, TRUE);
-	//m_listCtrl.Sort(2, FALSE, FALSE);
+	m_listCtrl.EnableMarkSortedColumn(TRUE, TRUE);
+	m_listCtrl.Sort(0, FALSE, FALSE);
 
 	return TRUE;
 }
