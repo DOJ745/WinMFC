@@ -43,8 +43,8 @@ END_MESSAGE_MAP()
 // диалоговое окно CWinMFCDlg
 CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/): 
 	CDialogEx(CWinMFCDlg::IDD, pParent), 
-	m_string(_T("default")),
-	m_ptrDialog(NULL)
+	m_ptrDialog(NULL), 
+	m_SomeData(_T("SOME DATA"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -52,7 +52,7 @@ CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/):
 void CWinMFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT_DATA, m_string);
+	DDX_Text(pDX, IDC_MAIN_WND_TEXT, m_SomeData);
 }
 
 BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
@@ -60,10 +60,9 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CWinMFCDlg::OnBnClickedButton1)
-	ON_EN_UPDATE(IDC_EDIT_DATA, &CWinMFCDlg::OnEnUpdateEditData)
-	ON_EN_CHANGE(IDC_EDIT_DATA, &CWinMFCDlg::OnEnChangeEditData)
 	ON_BN_CLICKED(IDC_BUTTON2, &CWinMFCDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CWinMFCDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_MAIN_WND_CHANGE_DATA, &CWinMFCDlg::OnBnClickedMainWndChangeData)
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -156,37 +155,13 @@ HCURSOR CWinMFCDlg::OnQueryDragIcon()
 // UpdateData(FALSE) means variables->controls, 
 // while UpdateData(TRUE) means controls->variables - includes "validation"
 
-// About to display
-void CWinMFCDlg::OnEnUpdateEditData()
-{
-	// TODO:  If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialogEx::OnInitDialog()
-	// function to send the EM_SETEVENTMASK message to the control
-	// with the ENM_UPDATE flag ORed into the lParam mask.
-
-	// TODO:  Add your control notification handler code here
-}
-
-// Display is updated after text changed
-void CWinMFCDlg::OnEnChangeEditData()
-{
-	// TODO:  If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialogEx::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO:  Add your control notification handler code here
-	UpdateData(TRUE);
-	m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
-}
-
 void formatData2(int dataToFormat, CString& str)
 {
 	if (dataToFormat <= 9) str.Format(L"0%d", dataToFormat);
 	else str.Format(L"%d", dataToFormat);
 }
 
-CString formLog()
+CString formLog(CString logData)
 {
 	time_t currentTime = time(0);
 	tm* now = localtime(&currentTime);
@@ -208,13 +183,14 @@ CString formLog()
 	formatData2(now->tm_sec, seconds);
 
 	CString formattedLog;
-	formattedLog.Format(L"\n%s-%s-%d %s:%s:%s\n",
+	formattedLog.Format(L"\n%s-%s-%d %s:%s:%s      %s\n",
 		day,
 		month,
 		now->tm_year + 1900,
 		hours,
 		minutes,
-		seconds);
+		seconds,
+		logData);
 
 	return formattedLog;
 }
@@ -239,13 +215,6 @@ void CWinMFCDlg::OnBnClickedButton1()
 void CWinMFCDlg::OnBnClickedButton2()
 {
 	// TODO: Add your control notification handler code here
-	for (int i = 0; i < 10; i++)
-	{
-		m_string += formLog();
-		m_ptrDialog->SetDlgItemTextW(IDC_PUT_DATA, m_string);
-		Sleep(400);
-	}
-	UpdateData(FALSE);
 }
 
 
@@ -253,7 +222,19 @@ void CWinMFCDlg::OnBnClickedButton3()
 {
 	for (int i = 0; i < 5; i++)
 	{
-		m_ptrDialog->AddData(formLog());
+		m_ptrDialog->AddData(formLog(L"RANDOM DATA"));
 		Sleep(250);
+	}
+}
+
+
+void CWinMFCDlg::OnBnClickedMainWndChangeData()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		m_SomeData.Format(L"RANDOM: %d", i);
+		m_ptrDialog->AddData(formLog(m_SomeData));
+		Sleep(300 + i * 10);
+		UpdateData(FALSE);
 	}
 }

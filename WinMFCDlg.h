@@ -7,10 +7,11 @@
 // диалоговое окно CWinMFCDlg
 class CWinMFCDlg : public CDialogEx
 {
+private:
+	CustomDialog* m_ptrDialog;
+	CString m_SomeData;
 // Создание
 public:
-	CustomDialog* m_ptrDialog;
-	CString m_string;
 	CWinMFCDlg(CWnd* pParent = NULL);	// стандартный конструктор
 	virtual ~CWinMFCDlg() 
 	{
@@ -36,8 +37,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();
-	afx_msg void OnEnUpdateEditData();
-	afx_msg void OnEnChangeEditData();
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedMainWndChangeData();
 };
