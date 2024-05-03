@@ -97,6 +97,7 @@
     <None Include="ReadMe.txt" />
     <None Include="res\afx_dial.bin" />
     <None Include="res\icon1.ico" />
+    <None Include="res\icon2.ico" />
     <None Include="res\WinMFC.ico" />
     <None Include="res\WinMFC.rc2" />
   </ItemGroup>

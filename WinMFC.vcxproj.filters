@@ -28,6 +28,9 @@
     <None Include="res\icon1.ico">
       <Filter>Файлы ресурсов</Filter>
     </None>
+    <None Include="res\icon2.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMFC.h">
