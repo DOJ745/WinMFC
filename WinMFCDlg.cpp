@@ -53,6 +53,7 @@ void CWinMFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_MAIN_WND_TEXT, m_SomeData);
+	DDX_Control(pDX, IDC_MAIN_WND_SHOW_CUSTOM_DIALOG, m_ShowCustomDlgBtn);
 }
 
 BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
@@ -99,6 +100,9 @@ BOOL CWinMFCDlg::OnInitDialog()
 	// TODO: добавьте дополнительную инициализацию
 	m_ptrDialog = new CustomDialog();
 	m_ptrDialog->Create(IDD_CUSTOM_DIALOG, GetSafeOwner());
+
+	m_ShowCustomDlgBtn.EnableWindowsTheming(FALSE);
+	m_ShowCustomDlgBtn.SetFaceColor(RGB(0, 255, 0));
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -183,7 +187,7 @@ CString formLog(CString logData)
 	formatData2(now->tm_sec, seconds);
 
 	CString formattedLog;
-	formattedLog.Format(L"\n%s-%s-%d %s:%s:%s      %s\n",
+	formattedLog.Format(L"%s-%s-%d %s:%s:%s      %s",
 		day,
 		month,
 		now->tm_year + 1900,
@@ -234,7 +238,7 @@ void CWinMFCDlg::OnBnClickedMainWndChangeData()
 	{
 		m_SomeData.Format(L"RANDOM: %d", i);
 		m_ptrDialog->AddData(formLog(m_SomeData));
-		Sleep(300 + i * 10);
+		Sleep(1000 + i * 10);
 		UpdateData(FALSE);
 	}
 }

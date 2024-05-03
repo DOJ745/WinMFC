@@ -8,6 +8,7 @@
 class CWinMFCDlg : public CDialogEx
 {
 private:
+	CMFCButton m_ShowCustomDlgBtn;
 	CustomDialog* m_ptrDialog;
 	CString m_SomeData;
 // Создание
