@@ -15,7 +15,8 @@ CustomDialog::CustomDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CustomDialog::IDD, pParent), 
 	m_putData(CStatic()),
 	m_listCtrl(MyCMFCListCtrl()),
-	m_imageList(CImageList())
+	m_imageList(CImageList()),
+	m_TextInfo(_T("DEFAULT"))
 {
 	m_imageList.Create(32, 32, ILC_COLOR, 0, 1);
 }
@@ -61,7 +62,7 @@ BOOL CustomDialog::OnInitDialog()
 	}
 	
 	m_listCtrl.EnableMarkSortedColumn(TRUE, TRUE);
-	m_listCtrl.SetBkColor(RGB(200, 9, 100));
+	m_listCtrl.SetBkColor(RGB(150, 30, 4));
 	m_listCtrl.Sort(0, FALSE, FALSE);
 
 	return TRUE;
@@ -73,12 +74,25 @@ void CustomDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PUT_DATA, m_putData);
 	DDX_Control(pDX, IDC_LIST1, m_listBox);
 	DDX_Control(pDX, IDC_CUSTOM_DIALOG_LIST_CTRL, m_listCtrl);
+	DDX_Text(pDX, IDC_CUSTOM_DIALOG_OUTPUT_INFO, m_TextInfo);
 }
 
 void formatData(int dataToFormat, CString& str)
 {
 	if (dataToFormat <= 9) str.Format(L"0%d", dataToFormat);
 	else str.Format(L"%d", dataToFormat);
+}
+
+void writePreparedDataInFile(CString str)
+{
+	CStringA log(str);
+
+	ofstream out("LOG-FILE.txt", ios::app);
+	if (out.is_open())
+	{
+		out << log << endl;
+	}
+	out.close();
 }
 
 void writeTextInFile(CustomDialog* dlg)
@@ -129,22 +143,23 @@ BEGIN_MESSAGE_MAP(CustomDialog, CDialog)
 	ON_WM_DESTROY()
 	ON_WM_VSCROLL()
 	ON_WM_SIZE()
+	ON_WM_SIZING()
 END_MESSAGE_MAP()
 
 void CustomDialog::OnClose()
 {
 	CDialog::OnClose();
 	// TODO: Add your message handler code here and/or call default
-	UpdateData(TRUE);
-	writeTextInFile(this);
+	//UpdateData(TRUE);
+	//writeTextInFile(this);
 }
 
 void CustomDialog::OnDestroy()
 {
 	CDialog::OnDestroy();
 	// TODO: Add your message handler code here
-	UpdateData(TRUE);
-	writeTextInFile(this);
+	//UpdateData(TRUE);
+	//writeTextInFile(this);
 }
 
 void CustomDialog::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
@@ -156,6 +171,13 @@ void CustomDialog::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 void CustomDialog::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);
+	/*
+	CRect rect;
+	SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
+	int main_x_size = 800; // Your desired width
+	int main_y_size = 600; // Your desired height
+	::SetWindowPos(m_hWnd, HWND_DESKTOP, 0, 0, main_x_size, main_y_size, SWP_NOZORDER);*/
+
 	//m_putData.SetWindowPos(
 	/*if (m_listBox.GetSafeHwnd())
 	{
@@ -171,15 +193,23 @@ void CustomDialog::OnSize(UINT nType, int cx, int cy)
 
 void CustomDialog::AddData(CString str)
 {
-	m_listBox.AddString(str);
+	//m_listBox.AddString(str);
 
-	/*CString number, date;
-	number.Format(_T("%d"), 0);
-	date.Format(_T("25-05-202%d"), 0);
-
-	int nIndex = m_listCtrl.InsertItem(0, date);
-	m_listCtrl.SetItemText(nIndex, 1, _T("14:54:01"));
-	m_listCtrl.SetItemText(nIndex, 2, number);*/
-
+	int nIndex = m_listCtrl.InsertItem(0, str.Mid(0, 11), 0);
+	m_listCtrl.SetItemText(nIndex, 1, str.Mid(12, 8));
+	m_listCtrl.SetItemText(nIndex, 2, str.Mid(26, str.GetLength()));
 	UpdateWindow();
+
+	writePreparedDataInFile(str);
+}
+
+void CustomDialog::OnSizing(UINT fwSide, LPRECT pRect)
+{
+	CDialog::OnSizing(fwSide, pRect);
+
+	// TODO: Add your message handler code here
+	UpdateData(FALSE);
+	m_TextInfo.Format(L"WIDTH: %d, HEIGHT %d", 
+		pRect->right - pRect->left,
+		pRect->bottom - pRect->top);
 }

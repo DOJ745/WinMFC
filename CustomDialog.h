@@ -11,6 +11,7 @@ private:
 	CListBox m_listBox;
 	MyCMFCListCtrl m_listCtrl;
 	CImageList m_imageList;
+	CString m_TextInfo;
 
 public:
 	CustomDialog(CWnd* pParent = NULL);
@@ -29,4 +30,5 @@ public:
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void AddData(CString str);
+	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
 };
