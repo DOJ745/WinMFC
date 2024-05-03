@@ -10,6 +10,7 @@ private:
 	CStatic m_putData;
 	CListBox m_listBox;
 	MyCMFCListCtrl m_listCtrl;
+	CImageList m_imageList;
 
 public:
 	CustomDialog(CWnd* pParent = NULL);

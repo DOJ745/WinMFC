@@ -14,8 +14,11 @@ IMPLEMENT_DYNAMIC(CustomDialog, CDialog)
 CustomDialog::CustomDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CustomDialog::IDD, pParent), 
 	m_putData(CStatic()),
-	m_listCtrl(MyCMFCListCtrl())
-{}
+	m_listCtrl(MyCMFCListCtrl()),
+	m_imageList(CImageList())
+{
+	m_imageList.Create(32, 32, ILC_COLOR, 0, 1);
+}
 
 CustomDialog::~CustomDialog(){}
 
@@ -39,6 +42,9 @@ BOOL CustomDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	m_imageList.Add(AfxGetApp()->LoadIcon(IDI_ICON2));
+	m_listCtrl.SetImageList(&m_imageList, LVSIL_SMALL);
+
 	m_listCtrl.InsertColumn(0, L"Date", 0, 200);
 	m_listCtrl.InsertColumn(1, L"Time", 1, 200);
 	m_listCtrl.InsertColumn(2, L"Log", 2, 200);
@@ -49,13 +55,13 @@ BOOL CustomDialog::OnInitDialog()
 		number.Format(_T("%d"), i);
 		date.Format(_T("25-05-202%d"), i);
 
-		int nIndex = m_listCtrl.InsertItem(i, date);
+		int nIndex = m_listCtrl.InsertItem(i, date, 0);
 		m_listCtrl.SetItemText(nIndex, 1, _T("14:54:01"));
 		m_listCtrl.SetItemText(nIndex, 2, number);
-		
 	}
 	
 	m_listCtrl.EnableMarkSortedColumn(TRUE, TRUE);
+	m_listCtrl.SetBkColor(RGB(200, 9, 100));
 	m_listCtrl.Sort(0, FALSE, FALSE);
 
 	return TRUE;
@@ -165,6 +171,15 @@ void CustomDialog::OnSize(UINT nType, int cx, int cy)
 
 void CustomDialog::AddData(CString str)
 {
-	UpdateWindow();
 	m_listBox.AddString(str);
+
+	/*CString number, date;
+	number.Format(_T("%d"), 0);
+	date.Format(_T("25-05-202%d"), 0);
+
+	int nIndex = m_listCtrl.InsertItem(0, date);
+	m_listCtrl.SetItemText(nIndex, 1, _T("14:54:01"));
+	m_listCtrl.SetItemText(nIndex, 2, number);*/
+
+	UpdateWindow();
 }

@@ -14,7 +14,7 @@ public:
 		lvfi.lParam = lParam2;
 		stritem2 = GetItemText(FindItem(&lvfi, 0), nColumn);
 
-		// 0th columns are sorted by integer
+		// Sorting zero column by integer
 	/*	if (nColumn == 0)
 		{
 			int nitem1 = _ttoi(stritem1);
@@ -25,7 +25,7 @@ public:
 		}*/
 		//else
 		//{
-			// Compare strings
+			// Compare items as strings
 			int isort = _tcsicmp(stritem1, stritem2);
 			return(isort);
 		//}
