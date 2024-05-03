@@ -187,8 +187,8 @@ void CustomDialog::AddData(CString str)
 	//m_listBox.AddString(str);
 
 	int nIndex = m_listCtrl.InsertItem(0, str.Mid(0, 11), 0);
-	m_listCtrl.SetItemText(nIndex, 1, str.Mid(12, 8));
-	m_listCtrl.SetItemText(nIndex, 2, str.Mid(26, str.GetLength()));
+	m_listCtrl.SetItemText(nIndex, 1, str.Mid(11, 8));
+	m_listCtrl.SetItemText(nIndex, 2, str.Mid(25, str.GetLength()));
 	UpdateWindow();
 
 	writePreparedDataInFile(str);
