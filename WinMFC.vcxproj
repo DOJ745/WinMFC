@@ -98,8 +98,8 @@
     <None Include="res\afx_dial.bin" />
     <None Include="res\icon1.ico" />
     <None Include="res\icon2.ico">
-      <DeploymentContent>true</DeploymentContent>
-      <FileType>BMP</FileType>
+      <DeploymentContent>false</DeploymentContent>
+      <FileType>ICO</FileType>
     </None>
     <None Include="res\WinMFC.ico" />
     <None Include="res\WinMFC.rc2" />
