@@ -7,8 +7,6 @@ class CustomDialog : public CDialog
 	DECLARE_DYNAMIC(CustomDialog)
 
 private:
-	CStatic m_putData;
-	CListBox m_listBox;
 	MyCMFCListCtrl m_listCtrl;
 	CImageList m_imageList;
 	CString m_TextInfo;
@@ -27,7 +25,6 @@ protected:
 public:
 	afx_msg void OnClose();
 	afx_msg void OnDestroy();
-	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void AddData(CString str);
 	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);

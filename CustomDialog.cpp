@@ -13,7 +13,6 @@ IMPLEMENT_DYNAMIC(CustomDialog, CDialog)
 
 CustomDialog::CustomDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CustomDialog::IDD, pParent), 
-	m_putData(CStatic()),
 	m_listCtrl(MyCMFCListCtrl()),
 	m_imageList(CImageList()),
 	m_TextInfo(_T("DEFAULT"))
@@ -71,8 +70,6 @@ BOOL CustomDialog::OnInitDialog()
 void CustomDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_PUT_DATA, m_putData);
-	DDX_Control(pDX, IDC_LIST1, m_listBox);
 	DDX_Control(pDX, IDC_CUSTOM_DIALOG_LIST_CTRL, m_listCtrl);
 	DDX_Text(pDX, IDC_CUSTOM_DIALOG_OUTPUT_INFO, m_TextInfo);
 }
@@ -160,12 +157,6 @@ void CustomDialog::OnDestroy()
 	// TODO: Add your message handler code here
 	//UpdateData(TRUE);
 	//writeTextInFile(this);
-}
-
-void CustomDialog::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
-{
-	// TODO: Add your message handler code here and/or call default
-	CDialog::OnVScroll(nSBCode, nPos, pScrollBar);
 }
 
 void CustomDialog::OnSize(UINT nType, int cx, int cy)
