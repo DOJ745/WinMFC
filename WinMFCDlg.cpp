@@ -60,10 +60,11 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON1, &CWinMFCDlg::OnBnClickedButton1)
-	ON_BN_CLICKED(IDC_BUTTON2, &CWinMFCDlg::OnBnClickedButton2)
-	ON_BN_CLICKED(IDC_BUTTON3, &CWinMFCDlg::OnBnClickedButton3)
-	ON_BN_CLICKED(IDC_MAIN_WND_CHANGE_DATA, &CWinMFCDlg::OnBnClickedMainWndChangeData)
+	ON_BN_CLICKED(IDC_BUTTON1,OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON3, OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_MAIN_WND_CHANGE_DATA, OnBnClickedMainWndChangeData)
+	ON_WM_HOTKEY()
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -103,6 +104,19 @@ BOOL CWinMFCDlg::OnInitDialog()
 
 	m_ShowCustomDlgBtn.EnableWindowsTheming(FALSE);
 	m_ShowCustomDlgBtn.SetFaceColor(RGB(0, 255, 0));
+
+	if (RegisterHotKey(
+		this->m_hWnd,
+		1,
+		MOD_ALT | MOD_CONTROL | MOD_NOREPEAT,
+		'B'))
+	{
+		MessageBoxA(
+			NULL,
+			"Hotkey 'CTRL+ALT+B' registered, using MOD_NOREPEAT flag",
+			"HOTKEY REG COMBINATION",
+			MB_OKCANCEL | MB_ICONASTERISK);
+	}
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -218,7 +232,32 @@ void CWinMFCDlg::OnBnClickedButton1()
 
 void CWinMFCDlg::OnBnClickedButton2()
 {
-	// TODO: Add your control notification handler code here
+	CRect rect;
+	GetWindowRect(&rect);
+
+	CImage* img = new CImage();
+
+	img->Create(rect.Width(), rect.Height(), 32);
+
+	HDC device_context_handle = img->GetDC();
+	HWND hwnd = this->GetSafeHwnd();
+
+	// PW_CLIENTONLY
+	bool isPrint = ::PrintWindow(hwnd, device_context_handle, 0);
+
+	if (isPrint)
+	{
+		HRESULT res = img->Save(L"D:\\testImage.bmp", Gdiplus::ImageFormatBMP);
+		img->ReleaseDC();
+
+		MessageBoxA(
+			NULL,
+			"Screenshot has been saved to D:\\testImage.bmp",
+			"SCREENSHOT",
+			MB_OKCANCEL | MB_ICONWARNING);
+	}
+
+	delete img;
 }
 
 
@@ -241,4 +280,14 @@ void CWinMFCDlg::OnBnClickedMainWndChangeData()
 		Sleep(1000 + i * 10);
 		UpdateData(FALSE);
 	}
+}
+
+
+void CWinMFCDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
+{
+	MessageBoxA(
+		NULL,
+		"Hotkey received!",
+		"HOTKEY COMBINATION",
+		MB_OKCANCEL | MB_ICONWARNING);
 }
