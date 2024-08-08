@@ -1,6 +1,11 @@
 #pragma once
 #include "afxwin.h"
 #include "MyCMFCListCtrl.h"
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
 
 class CustomDialog : public CDialog
 {
@@ -10,6 +15,9 @@ private:
 	MyCMFCListCtrl m_listCtrl;
 	CImageList m_imageList;
 	CString m_TextInfo;
+
+	string m_testString;
+	vector<string> m_testVectorStr;
 
 public:
 	CustomDialog(CWnd* pParent = NULL);
