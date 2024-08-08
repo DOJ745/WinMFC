@@ -51,4 +51,5 @@ public:
 	afx_msg void OnBnClickedCheckApplyNumber();
 
 	DWORD ThreadFunc();
+	afx_msg void OnBnClickedMainWndOpenCalc();
 };
