@@ -42,4 +42,13 @@ public:
 	afx_msg void OnBnClickedButton3();
 	afx_msg void OnBnClickedMainWndChangeData();
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
+private:
+	BOOL m_ApplyNumber;
+	int m_InputNumber;
+	CSpinButtonCtrl m_SpinControl;
+public:
+	afx_msg void OnEnUpdateEditInputNumber();
+	afx_msg void OnBnClickedCheckApplyNumber();
+
+	DWORD ThreadFunc();
 };

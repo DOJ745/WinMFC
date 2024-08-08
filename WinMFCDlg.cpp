@@ -10,7 +10,6 @@
 #define new DEBUG_NEW
 #endif
 
-
 // Диалоговое окно CAboutDlg используется для описания сведений о приложении
 class CAboutDlg : public CDialogEx
 {
@@ -45,6 +44,8 @@ CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/):
 	CDialogEx(CWinMFCDlg::IDD, pParent), 
 	m_ptrDialog(NULL), 
 	m_SomeData(_T("SOME DATA"))
+	, m_ApplyNumber(FALSE)
+	, m_InputNumber(10)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -54,6 +55,9 @@ void CWinMFCDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_MAIN_WND_TEXT, m_SomeData);
 	DDX_Control(pDX, IDC_MAIN_WND_SHOW_CUSTOM_DIALOG, m_ShowCustomDlgBtn);
+	DDX_Check(pDX, IDC_CHECK_APPLY_NUMBER, m_ApplyNumber);
+	DDX_Text(pDX, IDC_EDIT_INPUT_NUMBER, m_InputNumber);
+	DDX_Control(pDX, IDC_SPIN_SET_NUMBER, m_SpinControl);
 }
 
 BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
@@ -65,6 +69,9 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_MAIN_WND_CHANGE_DATA, OnBnClickedMainWndChangeData)
 	ON_WM_HOTKEY()
+	ON_EN_UPDATE(IDC_EDIT_INPUT_NUMBER, &CWinMFCDlg::OnEnUpdateEditInputNumber)
+	ON_BN_CLICKED(IDC_CHECK_APPLY_NUMBER, &CWinMFCDlg::OnBnClickedCheckApplyNumber)
+//	ON_EN_CHANGE(IDC_EDIT_INPUT_NUMBER, &CWinMFCDlg::OnEnChangeEditInputNumber)
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -99,6 +106,7 @@ BOOL CWinMFCDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Мелкий значок
 
 	// TODO: добавьте дополнительную инициализацию
+
 	m_ptrDialog = new CustomDialog();
 	m_ptrDialog->Create(IDD_CUSTOM_DIALOG, GetSafeOwner());
 
@@ -117,6 +125,12 @@ BOOL CWinMFCDlg::OnInitDialog()
 			"HOTKEY REG COMBINATION",
 			MB_OKCANCEL | MB_ICONASTERISK);
 	}
+
+	SetDlgItemInt(IDC_EDIT_INPUT_NUMBER, 10, FALSE);
+	m_SpinControl.SetRange(-10, 10);
+
+	GetDlgItem(IDC_EDIT_INPUT_NUMBER)->EnableWindow(FALSE);
+	GetDlgItem(IDC_SPIN_SET_NUMBER)->EnableWindow(FALSE);
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -290,4 +304,50 @@ void CWinMFCDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 		"Hotkey received!",
 		"HOTKEY COMBINATION",
 		MB_OKCANCEL | MB_ICONWARNING);
+
+	if (m_ApplyNumber)
+	{
+		m_SomeData.Format(L"Add number: %d", m_InputNumber);
+		UpdateData(FALSE);
+	}
+}
+
+
+void CWinMFCDlg::OnEnUpdateEditInputNumber()
+{
+	m_InputNumber = GetDlgItemInt(IDC_EDIT_INPUT_NUMBER);
+
+	UpdateData(FALSE);
+}
+
+
+void CWinMFCDlg::OnBnClickedCheckApplyNumber()
+{
+	m_ApplyNumber = !m_ApplyNumber;
+
+	if (m_ApplyNumber)
+	{
+		GetDlgItem(IDC_EDIT_INPUT_NUMBER)->EnableWindow(TRUE);
+		GetDlgItem(IDC_SPIN_SET_NUMBER)->EnableWindow(TRUE);
+	}
+	else
+	{
+		GetDlgItem(IDC_EDIT_INPUT_NUMBER)->EnableWindow(FALSE);
+		GetDlgItem(IDC_SPIN_SET_NUMBER)->EnableWindow(FALSE);
+	}
+
+	UpdateData(FALSE);
+}
+
+DWORD CWinMFCDlg::ThreadFunc()
+{
+	for (int i = 0; i < 5; i++)
+	{
+		CString temp;
+		temp.Format(L"THREAD %d", i);
+		SetDlgItemText(IDC_MAIN_WND_TEXT, temp);
+		Sleep(250);
+	}
+	
+	return 5;
 }
