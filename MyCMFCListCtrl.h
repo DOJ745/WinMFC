@@ -7,28 +7,33 @@ public:
 	{
 		// Retrieve two comparison items
 		CString stritem1, stritem2;
+
 		LVFINDINFO lvfi;
 		lvfi.flags = LVFI_PARAM;
+
 		lvfi.lParam = lParam1;
 		stritem1 = GetItemText(FindItem(&lvfi), nColumn);
+
 		lvfi.lParam = lParam2;
 		stritem2 = GetItemText(FindItem(&lvfi, 0), nColumn);
 
-		// Sorting zero column by integer
-	/*	if (nColumn == 0)
+		// Sorting 3rd column by integer
+		if (nColumn == 2)
 		{
 			int nitem1 = _ttoi(stritem1);
 			int nitem2 = _ttoi(stritem2);
 
-			if (nitem1 == nitem2) return 0;
-			else return(nitem1 < nitem2 ? -1 : 1);
-		}*/
-		//else
-		//{
+			if (nitem1 == nitem2) 
+				return 0;
+			else 
+				return(nitem1 < nitem2 ? -1 : 1);
+		}
+		else
+		{
 			// Compare items as strings
 			int isort = _tcsicmp(stritem1, stritem2);
 			return(isort);
-		//}
+		}
 	}
 	virtual ~MyCMFCListCtrl() {}
 };
