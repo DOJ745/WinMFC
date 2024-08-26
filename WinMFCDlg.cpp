@@ -6,9 +6,15 @@
 #include "afxdialogex.h"
 #include "CustomDialog.h"
 
+#include <string>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+// Custom window message
+const int WM_THREADENDED = WM_USER + 1;
+
 
 // ƒиалоговое окно CAboutDlg используетс€ дл€ описани€ сведений о приложении
 class CAboutDlg : public CDialogEx
@@ -61,6 +67,7 @@ void CWinMFCDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
+	ON_MESSAGE(WM_THREADENDED, OnThreadEnded)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
@@ -69,10 +76,11 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_MAIN_WND_CHANGE_DATA, OnBnClickedMainWndChangeData)
 	ON_WM_HOTKEY()
-	ON_EN_UPDATE(IDC_EDIT_INPUT_NUMBER, &CWinMFCDlg::OnEnUpdateEditInputNumber)
-	ON_BN_CLICKED(IDC_CHECK_APPLY_NUMBER, &CWinMFCDlg::OnBnClickedCheckApplyNumber)
+	ON_EN_UPDATE(IDC_EDIT_INPUT_NUMBER, OnEnUpdateEditInputNumber)
+	ON_BN_CLICKED(IDC_CHECK_APPLY_NUMBER, OnBnClickedCheckApplyNumber)
 //	ON_EN_CHANGE(IDC_EDIT_INPUT_NUMBER, &CWinMFCDlg::OnEnChangeEditInputNumber)
-ON_BN_CLICKED(IDC_MAIN_WND_OPEN_CALC, &CWinMFCDlg::OnBnClickedMainWndOpenCalc)
+	ON_BN_CLICKED(IDC_MAIN_WND_OPEN_CALC, OnBnClickedMainWndOpenCalc)
+	ON_BN_CLICKED(IDC_MAIN_WND_LAUNCH_ASYNC, OnBnClickedMainWndLaunchAsync)
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -340,17 +348,22 @@ void CWinMFCDlg::OnBnClickedCheckApplyNumber()
 	UpdateData(FALSE);
 }
 
-DWORD CWinMFCDlg::ThreadFunc()
+UINT ThreadFunc(LPVOID param)
 {
+	HWND mainWndHandle = (HWND)param;
+
 	for (int i = 0; i < 5; i++)
 	{
-		CString temp;
-		temp.Format(L"THREAD %d", i);
-		SetDlgItemText(IDC_MAIN_WND_TEXT, temp);
-		Sleep(250);
+		std::string temp = "Test " + std::to_string(static_cast<long double>(i));
+		
+		SetDlgItemTextA(mainWndHandle, IDC_MAIN_WND_TEXT, temp.c_str());
+		Sleep(1000);
 	}
-	
-	return 5;
+
+	// Custom message send
+	::PostMessage(mainWndHandle, WM_THREADENDED, (WPARAM)mainWndHandle, 0);
+
+	return 0;
 }
 
 void CWinMFCDlg::OnBnClickedMainWndOpenCalc()
@@ -378,9 +391,9 @@ void CWinMFCDlg::OnBnClickedMainWndOpenCalc()
 	{
 		MessageBoxA
 		(
-			NULL, 
-			"Failed to start Calculator", 
-			"Error", 
+			NULL,
+			"Failed to start Calculator",
+			"Error",
 			MB_OK | MB_ICONERROR
 		);
 
@@ -388,9 +401,57 @@ void CWinMFCDlg::OnBnClickedMainWndOpenCalc()
 	}
 
 	// Wait until Calculator exits
-	WaitForSingleObject(pi.hProcess, INFINITE);
+	DWORD result = WaitForSingleObject(pi.hProcess, 1000);
+
+	if (result == WAIT_OBJECT_0)
+	{
+		MessageBoxA
+		(
+			NULL,
+			"The calc has been opened successfully!",
+			"Finish",
+			MB_OK | MB_ICONINFORMATION
+		);
+	}
+
+	if (result == WAIT_TIMEOUT)
+	{
+		MessageBoxA
+		(
+			NULL,
+			"Tiemout!",
+			"Error",
+			MB_OK | MB_ICONERROR
+		);
+	}
 
 	// Close process and thread handles
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
+}
+
+void CWinMFCDlg::OnBnClickedMainWndLaunchAsync()
+{
+	m_hThread = CreateThread(
+		NULL,
+		0,
+		(LPTHREAD_START_ROUTINE)ThreadFunc,
+		this->GetSafeHwnd(),
+		0,
+		NULL); // Option 1
+
+	//AfxBeginThread(ThreadFunc, this->GetSafeHwnd()); // Option 2
+}
+
+LONG CWinMFCDlg::OnThreadEnded(WPARAM wParam, LPARAM lParam)
+{
+	::MessageBox(
+		(HWND)wParam,
+		L"Thread Ended",
+		L"Message from thread",
+		MB_OK | MB_ICONINFORMATION);
+
+	CloseHandle(m_hThread); // Option 1
+
+	return 0;
 }

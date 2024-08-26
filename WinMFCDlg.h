@@ -11,6 +11,7 @@ private:
 	CMFCButton m_ShowCustomDlgBtn;
 	CustomDialog* m_ptrDialog;
 	CString m_SomeData;
+	HANDLE m_hThread;
 // Создание
 public:
 	CWinMFCDlg(CWnd* pParent = NULL);	// стандартный конструктор
@@ -42,14 +43,18 @@ public:
 	afx_msg void OnBnClickedButton3();
 	afx_msg void OnBnClickedMainWndChangeData();
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
+
+	afx_msg LONG OnThreadEnded(WPARAM wParam, LPARAM lParam);
+
+	afx_msg void OnEnUpdateEditInputNumber();
+	afx_msg void OnBnClickedCheckApplyNumber();
+	afx_msg void OnBnClickedMainWndOpenCalc();
+	afx_msg void OnBnClickedMainWndLaunchAsync();
+
 private:
 	BOOL m_ApplyNumber;
 	int m_InputNumber;
 	CSpinButtonCtrl m_SpinControl;
-public:
-	afx_msg void OnEnUpdateEditInputNumber();
-	afx_msg void OnBnClickedCheckApplyNumber();
 
-	DWORD ThreadFunc();
-	afx_msg void OnBnClickedMainWndOpenCalc();
+	
 };
