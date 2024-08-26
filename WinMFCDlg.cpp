@@ -81,6 +81,8 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 //	ON_EN_CHANGE(IDC_EDIT_INPUT_NUMBER, &CWinMFCDlg::OnEnChangeEditInputNumber)
 	ON_BN_CLICKED(IDC_MAIN_WND_OPEN_CALC, OnBnClickedMainWndOpenCalc)
 	ON_BN_CLICKED(IDC_MAIN_WND_LAUNCH_ASYNC, OnBnClickedMainWndLaunchAsync)
+	ON_BN_CLICKED(IDC_MAIN_WND_START_AFX, &CWinMFCDlg::OnBnClickedMainWndStartAfx)
+	ON_BN_CLICKED(IDC_MAIN_WND_STOP_AFX, &CWinMFCDlg::OnBnClickedMainWndStopAfx)
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -366,6 +368,27 @@ UINT ThreadFunc(LPVOID param)
 	return 0;
 }
 
+UINT AfxThreadFunc(LPVOID param)
+{
+	//HWND mainWndHandle = (HWND)param;
+	CWinMFCDlg* myDlg = (CWinMFCDlg*)param;
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (WaitForSingleObject(myDlg->m_ExitThread, 0) == WAIT_OBJECT_0)
+		{
+			break;
+		}
+			
+		std::string temp = "AFX THREAD " + std::to_string(static_cast<long double>(i));
+
+		SetDlgItemTextA(myDlg->GetSafeHwnd(), IDC_MAIN_WND_TEXT, temp.c_str());
+		Sleep(1000);
+	}
+
+	return 0;
+}
+
 void CWinMFCDlg::OnBnClickedMainWndOpenCalc()
 {
 	STARTUPINFO si;
@@ -454,4 +477,20 @@ LONG CWinMFCDlg::OnThreadEnded(WPARAM wParam, LPARAM lParam)
 	CloseHandle(m_hThread); // Option 1
 
 	return 0;
+}
+
+void CWinMFCDlg::OnBnClickedMainWndStartAfx()
+{
+	// TODO: Add your control notification handler code here
+	m_ExitThread = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+
+	CWinThread* myAfxThread = AfxBeginThread(AfxThreadFunc, (LPVOID)this);
+	HANDLE myAfxThreadHandle = myAfxThread->m_hThread;
+}
+
+
+void CWinMFCDlg::OnBnClickedMainWndStopAfx()
+{
+	// TODO: Add your control notification handler code here
+	::SetEvent(m_ExitThread);
 }

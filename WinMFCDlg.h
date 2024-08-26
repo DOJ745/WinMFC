@@ -14,6 +14,8 @@ private:
 	HANDLE m_hThread;
 // Создание
 public:
+
+	HANDLE m_ExitThread;
 	CWinMFCDlg(CWnd* pParent = NULL);	// стандартный конструктор
 	virtual ~CWinMFCDlg() 
 	{
@@ -57,4 +59,7 @@ private:
 	CSpinButtonCtrl m_SpinControl;
 
 	
+public:
+	afx_msg void OnBnClickedMainWndStartAfx();
+	afx_msg void OnBnClickedMainWndStopAfx();
 };
