@@ -7,6 +7,8 @@
 #include "CustomDialog.h"
 
 #include <string>
+#include <Windows.h>
+#include "Log.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -83,6 +85,7 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_MAIN_WND_LAUNCH_ASYNC, OnBnClickedMainWndLaunchAsync)
 	ON_BN_CLICKED(IDC_MAIN_WND_START_AFX, &CWinMFCDlg::OnBnClickedMainWndStartAfx)
 	ON_BN_CLICKED(IDC_MAIN_WND_STOP_AFX, &CWinMFCDlg::OnBnClickedMainWndStopAfx)
+	ON_BN_CLICKED(IDC_MAIN_WND_DO_INI, &CWinMFCDlg::OnBnClickedMainWndDoIni)
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -391,6 +394,8 @@ UINT AfxThreadFunc(LPVOID param)
 
 void CWinMFCDlg::OnBnClickedMainWndOpenCalc()
 {
+	Log::GetInstance().WriteMsg("LAUCH CALCULATOR");
+
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
@@ -493,4 +498,19 @@ void CWinMFCDlg::OnBnClickedMainWndStopAfx()
 {
 	// TODO: Add your control notification handler code here
 	::SetEvent(m_ExitThread);
+}
+
+
+void CWinMFCDlg::OnBnClickedMainWndDoIni()
+{
+	const std::string filePath = ".\\test-config.ini";
+	const std::string section = "SECTION";
+	const std::string key = "KEY";
+	const std::string value = "VALUE";
+	
+	std::string myStrData;
+	
+	WritePrivateProfileStringA(section.c_str(), key.c_str(), value.c_str(), filePath.c_str());
+	GetPrivateProfileStringA(section.c_str(), key.c_str(), value.c_str(), myStrData._Myptr(), sizeof(myStrData) / sizeof(myStrData[0]), filePath.c_str());
+	SetDlgItemTextA(GetSafeHwnd(), IDC_MAIN_WND_TEXT, myStrData.c_str());
 }

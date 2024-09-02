@@ -62,4 +62,5 @@ private:
 public:
 	afx_msg void OnBnClickedMainWndStartAfx();
 	afx_msg void OnBnClickedMainWndStopAfx();
+	afx_msg void OnBnClickedMainWndDoIni();
 };
