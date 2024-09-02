@@ -1,8 +1,5 @@
 #include "StdAfx.h"
 #include "Log.h"
-#include <fstream>
-#include <string>
-#include <windows.h>
 #include <ctime>
 #include <sstream>
 #include <iomanip>
@@ -36,7 +33,7 @@ Log& Log::GetInstance()
 void Log::WriteMsg(const std::string& msg)
 {
     EnterCriticalSection(&logCriticalSection);
-    logFile << GetCurrentDateTime() << " " << msg << std::endl;
+    logFile << GetCurrentDateTime() << msg << std::endl;
     LeaveCriticalSection(&logCriticalSection);
 }
 
@@ -46,6 +43,6 @@ std::string Log::GetCurrentDateTime()
     std::tm localTime;
     localtime_s(&localTime, &now);
     std::ostringstream oss;
-    oss << std::put_time(&localTime, "[%Y-%m-%d %H:%M:%S]");
+    oss << std::put_time(&localTime, "[%d-%m-%Y %H:%M:%S] ");
     return oss.str();
 }

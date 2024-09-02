@@ -9,8 +9,12 @@ private:
     Log();
 
     ~Log();
-    //Log(const Log&) = delete;
-    //Log& operator=(const Log&) = delete;
+    
+    // Запрет конструктора копирования
+    Log(const Log&);
+
+    // Запрет копирования
+    Log& operator=(const Log&);
 
     std::string GetCurrentDateTime();
 
