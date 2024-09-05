@@ -9,6 +9,7 @@
 #include <string>
 #include <Windows.h>
 #include "Log.h"
+#include "MathLibrary.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -357,13 +358,27 @@ UINT ThreadFunc(LPVOID param)
 {
 	HWND mainWndHandle = (HWND)param;
 
-	for (int i = 0; i < 5; i++)
+	/*for (int i = 0; i < 5; i++)
 	{
 		std::string temp = "Test " + std::to_string(static_cast<long double>(i));
 		
 		SetDlgItemTextA(mainWndHandle, IDC_MAIN_WND_TEXT, temp.c_str());
 		Sleep(1000);
-	}
+	}*/
+
+	// Exporting DLL (they should be the same bit depth - x86 or x64)
+
+	fibonacci_init(1, 1);
+	// Write out the sequence values until overflow.
+	do 
+	{
+		std::string temp = "Fibonacci DLL --- " + 
+			std::to_string(static_cast<long double>(fibonacci_index())) + ": "
+			+ std::to_string(static_cast<long double>(fibonacci_current()));
+
+		SetDlgItemTextA(mainWndHandle, IDC_MAIN_WND_TEXT, temp.c_str());
+		Sleep(1000);
+	} while (fibonacci_next());
 
 	// Custom message send
 	::PostMessage(mainWndHandle, WM_THREADENDED, (WPARAM)mainWndHandle, 0);
@@ -373,7 +388,6 @@ UINT ThreadFunc(LPVOID param)
 
 UINT AfxThreadFunc(LPVOID param)
 {
-	//HWND mainWndHandle = (HWND)param;
 	CWinMFCDlg* myDlg = (CWinMFCDlg*)param;
 
 	for (int i = 0; i < 10; i++)
@@ -460,6 +474,8 @@ void CWinMFCDlg::OnBnClickedMainWndOpenCalc()
 
 void CWinMFCDlg::OnBnClickedMainWndLaunchAsync()
 {
+	GetDlgItem(IDC_EDIT1)->EnableWindow(FALSE);
+	//UpdateWindow();
 	m_hThread = CreateThread(
 		NULL,
 		0,
@@ -479,6 +495,7 @@ LONG CWinMFCDlg::OnThreadEnded(WPARAM wParam, LPARAM lParam)
 		L"Message from thread",
 		MB_OK | MB_ICONINFORMATION);
 
+	GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
 	CloseHandle(m_hThread); // Option 1
 
 	return 0;
@@ -486,11 +503,17 @@ LONG CWinMFCDlg::OnThreadEnded(WPARAM wParam, LPARAM lParam)
 
 void CWinMFCDlg::OnBnClickedMainWndStartAfx()
 {
-	// TODO: Add your control notification handler code here
+	GetDlgItem(IDC_EDIT1)->EnableWindow(FALSE);
 	m_ExitThread = ::CreateEvent(NULL, FALSE, FALSE, NULL);
 
 	CWinThread* myAfxThread = AfxBeginThread(AfxThreadFunc, (LPVOID)this);
 	HANDLE myAfxThreadHandle = myAfxThread->m_hThread;
+
+	/*if (WaitForSingleObject(myAfxThreadHandle, INFINITE) == WAIT_OBJECT_0)
+	{
+		AfxMessageBox(L"FINISHED", MB_OK | MB_ICONINFORMATION);
+		GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
+	}*/
 }
 
 
