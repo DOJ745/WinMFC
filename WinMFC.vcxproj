@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CustomDialog.h" />
+    <ClInclude Include="IShowMessageBox.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MyCMFCListCtrl.h" />
     <ClInclude Include="Resource.h" />

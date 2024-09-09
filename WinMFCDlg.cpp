@@ -14,6 +14,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "IShowMessageBox.h"
 
 // Custom window message
 const int WM_THREADENDED = WM_USER + 1;
@@ -146,6 +147,10 @@ BOOL CWinMFCDlg::OnInitDialog()
 
 	GetDlgItem(IDC_EDIT_INPUT_NUMBER)->EnableWindow(FALSE);
 	GetDlgItem(IDC_SPIN_SET_NUMBER)->EnableWindow(FALSE);
+
+	MessageDisplayer displayer;
+
+	displayer.ShowMsgBox();
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -358,6 +363,8 @@ UINT ThreadFunc(LPVOID param)
 {
 	HWND mainWndHandle = (HWND)param;
 
+	TRACE1("\n\t === ThreadFunc ID: %d === \t\n", GetCurrentThreadId());
+
 	/*for (int i = 0; i < 5; i++)
 	{
 		std::string temp = "Test " + std::to_string(static_cast<long double>(i));
@@ -475,16 +482,13 @@ void CWinMFCDlg::OnBnClickedMainWndOpenCalc()
 void CWinMFCDlg::OnBnClickedMainWndLaunchAsync()
 {
 	GetDlgItem(IDC_EDIT1)->EnableWindow(FALSE);
-	//UpdateWindow();
 	m_hThread = CreateThread(
 		NULL,
 		0,
 		(LPTHREAD_START_ROUTINE)ThreadFunc,
 		this->GetSafeHwnd(),
 		0,
-		NULL); // Option 1
-
-	//AfxBeginThread(ThreadFunc, this->GetSafeHwnd()); // Option 2
+		NULL);
 }
 
 LONG CWinMFCDlg::OnThreadEnded(WPARAM wParam, LPARAM lParam)
@@ -496,7 +500,7 @@ LONG CWinMFCDlg::OnThreadEnded(WPARAM wParam, LPARAM lParam)
 		MB_OK | MB_ICONINFORMATION);
 
 	GetDlgItem(IDC_EDIT1)->EnableWindow(TRUE);
-	CloseHandle(m_hThread); // Option 1
+	CloseHandle(m_hThread);
 
 	return 0;
 }
