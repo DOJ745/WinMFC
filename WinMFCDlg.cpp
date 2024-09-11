@@ -149,8 +149,17 @@ BOOL CWinMFCDlg::OnInitDialog()
 	GetDlgItem(IDC_SPIN_SET_NUMBER)->EnableWindow(FALSE);
 
 	MessageDisplayer displayer;
-
 	displayer.ShowMsgBox();
+
+	Log::GetInstance().WriteMsg("TEST MSG");
+
+	double tempNumber = std::stod("41.12345");
+
+	MessageBoxA(
+		NULL, 
+		std::to_string(static_cast<long double>(tempNumber)).c_str(),
+		"STOD function",
+		MB_OKCANCEL | MB_ICONINFORMATION);
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -415,8 +424,6 @@ UINT AfxThreadFunc(LPVOID param)
 
 void CWinMFCDlg::OnBnClickedMainWndOpenCalc()
 {
-	Log::GetInstance().WriteMsg("LAUCH CALCULATOR");
-
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
