@@ -4,6 +4,25 @@
 #pragma once
 #include "CustomDialog.h"
 
+// Custom edit field class
+class CDoubleEdit : public CEdit
+{
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg)
+	{
+		if (pMsg->message == WM_CHAR)
+		{
+			TCHAR ch = (TCHAR)pMsg->wParam;
+
+			if (!isdigit(ch) && ch != VK_BACK && ch != '.') //&& ch != '-')
+			{
+				return TRUE; // Ignore the character
+			}
+		}
+		return CEdit::PreTranslateMessage(pMsg);
+	}
+};
+
 // диалоговое окно CWinMFCDlg
 class CWinMFCDlg : public CDialogEx
 {
@@ -16,6 +35,9 @@ private:
 public:
 
 	HANDLE m_ExitThread;
+	CDoubleEdit m_EditDouble;
+	double m_DoubleNumber;
+
 	CWinMFCDlg(CWnd* pParent = NULL);	// стандартный конструктор
 	virtual ~CWinMFCDlg() 
 	{
@@ -63,4 +85,5 @@ public:
 	afx_msg void OnBnClickedMainWndStartAfx();
 	afx_msg void OnBnClickedMainWndStopAfx();
 	afx_msg void OnBnClickedMainWndDoIni();
+	afx_msg void OnEnUpdateEditDouble();
 };

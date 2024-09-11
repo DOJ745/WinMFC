@@ -19,7 +19,6 @@
 // Custom window message
 const int WM_THREADENDED = WM_USER + 1;
 
-
 // Диалоговое окно CAboutDlg используется для описания сведений о приложении
 class CAboutDlg : public CDialogEx
 {
@@ -88,6 +87,7 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_MAIN_WND_START_AFX, &CWinMFCDlg::OnBnClickedMainWndStartAfx)
 	ON_BN_CLICKED(IDC_MAIN_WND_STOP_AFX, &CWinMFCDlg::OnBnClickedMainWndStopAfx)
 	ON_BN_CLICKED(IDC_MAIN_WND_DO_INI, &CWinMFCDlg::OnBnClickedMainWndDoIni)
+	ON_EN_UPDATE(IDC_EDIT_DOUBLE, OnEnUpdateEditDouble)
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -153,7 +153,7 @@ BOOL CWinMFCDlg::OnInitDialog()
 
 	Log::GetInstance().WriteMsg("TEST MSG");
 
-	double tempNumber = std::stod("41.12345");
+	double tempNumber = std::stod("41.5");
 	double tempNumber2 = std::stod("42,12345");
 
 	MessageBoxA(
@@ -167,6 +167,9 @@ BOOL CWinMFCDlg::OnInitDialog()
 		std::to_string(static_cast<long double>(tempNumber2)).c_str(),
 		"STOD function with comma",
 		MB_OKCANCEL | MB_ICONINFORMATION);
+
+
+	m_EditDouble.SubclassDlgItem(IDC_EDIT_DOUBLE, this);
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -346,6 +349,12 @@ void CWinMFCDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 		m_SomeData.Format(L"Add number: %d", m_InputNumber);
 		UpdateData(FALSE);
 	}
+
+	MessageBoxA(
+		NULL,
+		std::to_string(static_cast<long double>(m_DoubleNumber)).c_str(),
+		"Testing new input field",
+		MB_OK | MB_ICONWARNING);
 }
 
 
@@ -552,6 +561,34 @@ void CWinMFCDlg::OnBnClickedMainWndDoIni()
 	std::string myStrData;
 	
 	WritePrivateProfileStringA(section.c_str(), key.c_str(), value.c_str(), filePath.c_str());
-	GetPrivateProfileStringA(section.c_str(), key.c_str(), value.c_str(), myStrData._Myptr(), sizeof(myStrData) / sizeof(myStrData[0]), filePath.c_str());
+
+	GetPrivateProfileStringA(
+		section.c_str(), 
+		key.c_str(), 
+		value.c_str(), 
+		myStrData._Myptr(), 
+		sizeof(myStrData) / sizeof(myStrData[0]), 
+		filePath.c_str());
+
 	SetDlgItemTextA(GetSafeHwnd(), IDC_MAIN_WND_TEXT, myStrData.c_str());
+}
+
+
+void CWinMFCDlg::OnEnUpdateEditDouble()
+{
+	CString tempNum;
+	GetDlgItemTextW(IDC_EDIT_DOUBLE, tempNum);
+
+	// Input field is empty
+	if (tempNum.GetLength() == 0)
+	{
+		m_DoubleNumber = 0;
+	}
+
+	if (tempNum.GetLength() > 0)
+	{
+		m_DoubleNumber = std::stod(tempNum.GetString());
+	}
+	
+	UpdateData(FALSE);
 }
