@@ -154,11 +154,18 @@ BOOL CWinMFCDlg::OnInitDialog()
 	Log::GetInstance().WriteMsg("TEST MSG");
 
 	double tempNumber = std::stod("41.12345");
+	double tempNumber2 = std::stod("42,12345");
 
 	MessageBoxA(
 		NULL, 
 		std::to_string(static_cast<long double>(tempNumber)).c_str(),
-		"STOD function",
+		"STOD function with period",
+		MB_OKCANCEL | MB_ICONINFORMATION);
+
+	MessageBoxA(
+		NULL,
+		std::to_string(static_cast<long double>(tempNumber2)).c_str(),
+		"STOD function with comma",
 		MB_OKCANCEL | MB_ICONINFORMATION);
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
