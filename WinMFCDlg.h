@@ -23,6 +23,7 @@ public:
 	}
 };
 
+
 // диалоговое окно CWinMFCDlg
 class CWinMFCDlg : public CDialogEx
 {
@@ -37,6 +38,8 @@ public:
 	HANDLE m_ExitThread;
 	CDoubleEdit m_EditDouble;
 	double m_DoubleNumber;
+
+	BOOL PreTranslateMessage(MSG* pMsg);
 
 	CWinMFCDlg(CWnd* pParent = NULL);	// стандартный конструктор
 	virtual ~CWinMFCDlg() 
@@ -86,4 +89,5 @@ public:
 	afx_msg void OnBnClickedMainWndStopAfx();
 	afx_msg void OnBnClickedMainWndDoIni();
 	afx_msg void OnEnUpdateEditDouble();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

@@ -48,6 +48,27 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
+
+BOOL CWinMFCDlg::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		if (pMsg->wParam == VK_DOWN)
+		{
+			MessageBoxA
+			(
+				NULL,
+				"Arrow Down!",
+				"Key",
+				MB_OK | MB_ICONERROR
+			);
+		}
+	}
+
+	return CDialog::PreTranslateMessage(pMsg);
+}
+
+
 // диалоговое окно CWinMFCDlg
 CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/): 
 	CDialogEx(CWinMFCDlg::IDD, pParent), 
@@ -73,6 +94,7 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_MESSAGE(WM_THREADENDED, OnThreadEnded)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
+	ON_WM_TIMER()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1,OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, OnBnClickedButton2)
@@ -81,12 +103,11 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_WM_HOTKEY()
 	ON_EN_UPDATE(IDC_EDIT_INPUT_NUMBER, OnEnUpdateEditInputNumber)
 	ON_BN_CLICKED(IDC_CHECK_APPLY_NUMBER, OnBnClickedCheckApplyNumber)
-//	ON_EN_CHANGE(IDC_EDIT_INPUT_NUMBER, &CWinMFCDlg::OnEnChangeEditInputNumber)
 	ON_BN_CLICKED(IDC_MAIN_WND_OPEN_CALC, OnBnClickedMainWndOpenCalc)
 	ON_BN_CLICKED(IDC_MAIN_WND_LAUNCH_ASYNC, OnBnClickedMainWndLaunchAsync)
-	ON_BN_CLICKED(IDC_MAIN_WND_START_AFX, &CWinMFCDlg::OnBnClickedMainWndStartAfx)
-	ON_BN_CLICKED(IDC_MAIN_WND_STOP_AFX, &CWinMFCDlg::OnBnClickedMainWndStopAfx)
-	ON_BN_CLICKED(IDC_MAIN_WND_DO_INI, &CWinMFCDlg::OnBnClickedMainWndDoIni)
+	ON_BN_CLICKED(IDC_MAIN_WND_START_AFX, OnBnClickedMainWndStartAfx)
+	ON_BN_CLICKED(IDC_MAIN_WND_STOP_AFX, OnBnClickedMainWndStopAfx)
+	ON_BN_CLICKED(IDC_MAIN_WND_DO_INI, OnBnClickedMainWndDoIni)
 	ON_EN_UPDATE(IDC_EDIT_DOUBLE, OnEnUpdateEditDouble)
 END_MESSAGE_MAP()
 
@@ -115,9 +136,8 @@ BOOL CWinMFCDlg::OnInitDialog()
 			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
 		}
 	}
-
 	// Задает значок для этого диалогового окна. Среда делает это автоматически,
-	//  если главное окно приложения не является диалоговым
+//  если главное окно приложения не является диалоговым
 	SetIcon(m_hIcon, TRUE);			// Крупный значок
 	SetIcon(m_hIcon, FALSE);		// Мелкий значок
 
@@ -157,7 +177,7 @@ BOOL CWinMFCDlg::OnInitDialog()
 	double tempNumber2 = std::stod("42,12345");
 
 	MessageBoxA(
-		NULL, 
+		NULL,
 		std::to_string(static_cast<long double>(tempNumber)).c_str(),
 		"STOD function with period",
 		MB_OKCANCEL | MB_ICONINFORMATION);
@@ -170,6 +190,8 @@ BOOL CWinMFCDlg::OnInitDialog()
 
 
 	m_EditDouble.SubclassDlgItem(IDC_EDIT_DOUBLE, this);
+
+	SetTimer(1, 100, NULL);
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -432,6 +454,7 @@ UINT AfxThreadFunc(LPVOID param)
 		std::string temp = "AFX THREAD " + std::to_string(static_cast<long double>(i));
 
 		SetDlgItemTextA(myDlg->GetSafeHwnd(), IDC_MAIN_WND_TEXT, temp.c_str());
+
 		Sleep(1000);
 	}
 
@@ -591,4 +614,22 @@ void CWinMFCDlg::OnEnUpdateEditDouble()
 	}
 	
 	UpdateData(FALSE);
+}
+
+void CWinMFCDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	if ((GetAsyncKeyState(VK_LEFT) & 0x8000) != 0)
+	{
+		MessageBoxA
+		(
+			this->GetSafeHwnd(),
+			"Arrow Left was pressed!",
+			"Key",
+			MB_OK | MB_ICONERROR
+		);
+	}
+
+	CDialogEx::OnTimer(nIDEvent);
 }
