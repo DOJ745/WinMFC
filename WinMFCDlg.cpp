@@ -19,6 +19,89 @@
 // Custom window message
 const int WM_THREADENDED = WM_USER + 1;
 
+UINT ThreadFunc(LPVOID param)
+{
+	HWND mainWndHandle = (HWND)param;
+
+	TRACE1("\n\t === ThreadFunc ID: %d === \t\n", GetCurrentThreadId());
+
+	/*for (int i = 0; i < 5; i++)
+	{
+		std::string temp = "Test " + std::to_string(static_cast<long double>(i));
+
+		SetDlgItemTextA(mainWndHandle, IDC_MAIN_WND_TEXT, temp.c_str());
+		Sleep(1000);
+	}*/
+
+	// Exporting DLL (they should be the same bit depth - x86 or x64)
+
+	fibonacci_init(1, 1);
+	// Write out the sequence values until overflow.
+	do
+	{
+		std::string temp = "Fibonacci DLL --- " +
+			std::to_string(static_cast<long double>(fibonacci_index())) + ": "
+			+ std::to_string(static_cast<long double>(fibonacci_current()));
+
+		SetDlgItemTextA(mainWndHandle, IDC_MAIN_WND_TEXT, temp.c_str());
+		Sleep(1000);
+	} while (fibonacci_next());
+
+	// Custom message send
+	::PostMessage(mainWndHandle, WM_THREADENDED, (WPARAM)mainWndHandle, 0);
+
+	return 0;
+}
+
+UINT AfxThreadFunc(LPVOID param)
+{
+	CWinMFCDlg* myDlg = (CWinMFCDlg*)param;
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (WaitForSingleObject(myDlg->m_ExitThread, 0) == WAIT_OBJECT_0)
+		{
+			break;
+		}
+
+		std::string temp = "AFX THREAD " + std::to_string(static_cast<long double>(i));
+
+		SetDlgItemTextA(myDlg->GetSafeHwnd(), IDC_MAIN_WND_TEXT, temp.c_str());
+
+		Sleep(1000);
+	}
+
+	return 0;
+}
+
+UINT AfxKeyPressFunc(LPVOID param)
+{
+	CWinMFCDlg* myDlg = (CWinMFCDlg*)param;
+
+	int i = 0;
+	while (true)
+	{
+		if ((GetAsyncKeyState(VK_LEFT) & 0x8000) != 0)
+		{
+			/*MessageBoxA
+			(
+				myDlg->GetSafeHwnd(),
+				"Arrow Left was pressed!",
+				"Key from thread",
+				MB_OK | MB_ICONERROR
+			);*/
+			std::string temp = "KEY THREAD " + std::to_string(static_cast<long double>(i++));
+
+			SetDlgItemTextA(myDlg->GetSafeHwnd(), IDC_MAIN_WND_TEXT, temp.c_str());
+
+		}
+		Sleep(10);
+	}
+	
+	
+	return 0;
+}
+
 // Диалоговое окно CAboutDlg используется для описания сведений о приложении
 class CAboutDlg : public CDialogEx
 {
@@ -59,7 +142,7 @@ BOOL CWinMFCDlg::PreTranslateMessage(MSG* pMsg)
 			(
 				NULL,
 				"Arrow Down!",
-				"Key",
+				"Key from PreTranslateMessage",
 				MB_OK | MB_ICONERROR
 			);
 		}
@@ -168,7 +251,7 @@ BOOL CWinMFCDlg::OnInitDialog()
 	GetDlgItem(IDC_EDIT_INPUT_NUMBER)->EnableWindow(FALSE);
 	GetDlgItem(IDC_SPIN_SET_NUMBER)->EnableWindow(FALSE);
 
-	MessageDisplayer displayer;
+	/*MessageDisplayer displayer;
 	displayer.ShowMsgBox();
 
 	Log::GetInstance().WriteMsg("TEST MSG");
@@ -186,10 +269,13 @@ BOOL CWinMFCDlg::OnInitDialog()
 		NULL,
 		std::to_string(static_cast<long double>(tempNumber2)).c_str(),
 		"STOD function with comma",
-		MB_OKCANCEL | MB_ICONINFORMATION);
+		MB_OKCANCEL | MB_ICONINFORMATION);*/
 
 
 	m_EditDouble.SubclassDlgItem(IDC_EDIT_DOUBLE, this);
+
+	CWinThread* myAfxThread = AfxBeginThread(AfxKeyPressFunc, (LPVOID)this);
+	m_KeyThread = myAfxThread->m_hThread;
 
 	SetTimer(1, 100, NULL);
 
@@ -406,60 +492,7 @@ void CWinMFCDlg::OnBnClickedCheckApplyNumber()
 	UpdateData(FALSE);
 }
 
-UINT ThreadFunc(LPVOID param)
-{
-	HWND mainWndHandle = (HWND)param;
 
-	TRACE1("\n\t === ThreadFunc ID: %d === \t\n", GetCurrentThreadId());
-
-	/*for (int i = 0; i < 5; i++)
-	{
-		std::string temp = "Test " + std::to_string(static_cast<long double>(i));
-		
-		SetDlgItemTextA(mainWndHandle, IDC_MAIN_WND_TEXT, temp.c_str());
-		Sleep(1000);
-	}*/
-
-	// Exporting DLL (they should be the same bit depth - x86 or x64)
-
-	fibonacci_init(1, 1);
-	// Write out the sequence values until overflow.
-	do 
-	{
-		std::string temp = "Fibonacci DLL --- " + 
-			std::to_string(static_cast<long double>(fibonacci_index())) + ": "
-			+ std::to_string(static_cast<long double>(fibonacci_current()));
-
-		SetDlgItemTextA(mainWndHandle, IDC_MAIN_WND_TEXT, temp.c_str());
-		Sleep(1000);
-	} while (fibonacci_next());
-
-	// Custom message send
-	::PostMessage(mainWndHandle, WM_THREADENDED, (WPARAM)mainWndHandle, 0);
-
-	return 0;
-}
-
-UINT AfxThreadFunc(LPVOID param)
-{
-	CWinMFCDlg* myDlg = (CWinMFCDlg*)param;
-
-	for (int i = 0; i < 10; i++)
-	{
-		if (WaitForSingleObject(myDlg->m_ExitThread, 0) == WAIT_OBJECT_0)
-		{
-			break;
-		}
-			
-		std::string temp = "AFX THREAD " + std::to_string(static_cast<long double>(i));
-
-		SetDlgItemTextA(myDlg->GetSafeHwnd(), IDC_MAIN_WND_TEXT, temp.c_str());
-
-		Sleep(1000);
-	}
-
-	return 0;
-}
 
 void CWinMFCDlg::OnBnClickedMainWndOpenCalc()
 {
@@ -599,7 +632,7 @@ void CWinMFCDlg::OnBnClickedMainWndDoIni()
 
 void CWinMFCDlg::OnEnUpdateEditDouble()
 {
-	CString tempNum;
+	/*CString tempNum;
 	GetDlgItemTextW(IDC_EDIT_DOUBLE, tempNum);
 
 	// Input field is empty
@@ -613,14 +646,36 @@ void CWinMFCDlg::OnEnUpdateEditDouble()
 		m_DoubleNumber = std::stod(tempNum.GetString());
 	}
 	
-	UpdateData(FALSE);
+	UpdateData(FALSE);*/
+
+	CString tempNum;
+	GetDlgItemTextW(IDC_EDIT_DOUBLE, tempNum);
+
+	// Проверка на пустое поле
+	if (tempNum.GetLength() == 0)
+	{
+		m_DoubleNumber = 0;
+	}
+	else
+	{
+		// Попытка преобразования строки в double
+		try 
+		{
+			m_DoubleNumber = std::stod(tempNum.GetString());
+		}
+		catch (const std::invalid_argument&) 
+		{
+			MessageBoxA(NULL, "Введите корректное число.", "Ошибка", MB_OK | MB_ICONERROR);
+			m_DoubleNumber = 0; // Сброс значения
+		}
+	}
 }
 
 void CWinMFCDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: Add your message handler code here and/or call default
 
-	if ((GetAsyncKeyState(VK_LEFT) & 0x8000) != 0)
+	/*if ((GetAsyncKeyState(VK_LEFT) & 0x8000) != 0)
 	{
 		MessageBoxA
 		(
@@ -629,7 +684,7 @@ void CWinMFCDlg::OnTimer(UINT_PTR nIDEvent)
 			"Key",
 			MB_OK | MB_ICONERROR
 		);
-	}
+	} */
 
 	CDialogEx::OnTimer(nIDEvent);
 }

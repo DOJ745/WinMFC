@@ -5,6 +5,7 @@
 #include "CustomDialog.h"
 
 // Custom edit field class
+
 class CDoubleEdit : public CEdit
 {
 public:
@@ -13,10 +14,30 @@ public:
 		if (pMsg->message == WM_CHAR)
 		{
 			TCHAR ch = (TCHAR)pMsg->wParam;
+			CString currentText;
+			GetWindowText(currentText);
 
-			if (!isdigit(ch) && ch != VK_BACK && ch != '.') //&& ch != '-')
+			if (!isdigit(ch) && ch != VK_BACK && ch != '.' && ch != '-' && ch != ',')
 			{
 				return TRUE; // Ignore the character
+			}
+
+			// Проверка на количество точек и знаков минус
+			if (ch == '.')
+			{
+				if (currentText.Find('.') != -1) return TRUE; // Уже есть точка
+			}
+			if (ch == ',')
+			{
+				if (currentText.Find(',') != -1) return TRUE; // Уже есть запятая
+				currentText += '.'; // Добавляем точку вместо запятой
+				SetWindowText(currentText); // Обновляем текст в поле
+				SetSel(currentText.GetLength(), currentText.GetLength()); // Устанавливаем курсор в конец
+				return TRUE; // Игнорируем ввод запятой
+			}
+			if (ch == '-')
+			{
+				if (currentText.GetLength() > 0) return TRUE; // Минус только в начале
 			}
 		}
 		return CEdit::PreTranslateMessage(pMsg);
@@ -35,6 +56,7 @@ private:
 // Создание
 public:
 
+	HANDLE m_KeyThread;
 	HANDLE m_ExitThread;
 	CDoubleEdit m_EditDouble;
 	double m_DoubleNumber;
