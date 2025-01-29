@@ -10,6 +10,7 @@
 #include <Windows.h>
 #include "Log.h"
 #include "MathLibrary.h"
+#include <vector>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -57,18 +58,65 @@ UINT AfxThreadFunc(LPVOID param)
 {
 	CWinMFCDlg* myDlg = (CWinMFCDlg*)param;
 
-	for (int i = 0; i < 10; i++)
+	// Step 0
+	if (WaitForSingleObject(myDlg->m_ExitThread, 0) == WAIT_OBJECT_0)
+	{
+		return 0;
+	}
+
+	// Step 1
+	for (int i = 0; i < 15; i++)
 	{
 		if (WaitForSingleObject(myDlg->m_ExitThread, 0) == WAIT_OBJECT_0)
 		{
-			break;
+			return 0;
 		}
 
-		std::string temp = "AFX THREAD " + std::to_string(static_cast<long double>(i));
+		std::string temp = "AFX THREAD STEP 1 " + std::to_string(static_cast<long double>(i));
 
 		SetDlgItemTextA(myDlg->GetSafeHwnd(), IDC_MAIN_WND_TEXT, temp.c_str());
 
-		Sleep(1000);
+		Sleep(100);
+	}
+
+	// Step 2
+	if (WaitForSingleObject(myDlg->m_ExitThread, 0) == WAIT_OBJECT_0)
+	{
+		return 0;
+	}
+
+	for (int i = 0; i < 15; i++)
+	{
+		if (WaitForSingleObject(myDlg->m_ExitThread, 0) == WAIT_OBJECT_0)
+		{
+			return 0;
+		}
+
+		std::string temp = "AFX THREAD STEP 2 " + std::to_string(static_cast<long double>(i));
+
+		SetDlgItemTextA(myDlg->GetSafeHwnd(), IDC_MAIN_WND_TEXT, temp.c_str());
+
+		Sleep(100);
+	}
+
+	// Step 3
+	if (WaitForSingleObject(myDlg->m_ExitThread, 0) == WAIT_OBJECT_0)
+	{
+		return 0;
+	}
+
+	for (int i = 0; i < 15; i++)
+	{
+		if (WaitForSingleObject(myDlg->m_ExitThread, 0) == WAIT_OBJECT_0)
+		{
+			return 0;
+		}
+
+		std::string temp = "AFX THREAD STEP 2 " + std::to_string(static_cast<long double>(i));
+
+		SetDlgItemTextA(myDlg->GetSafeHwnd(), IDC_MAIN_WND_TEXT, temp.c_str());
+
+		Sleep(100);
 	}
 
 	return 0;
@@ -83,13 +131,6 @@ UINT AfxKeyPressFunc(LPVOID param)
 	{
 		if ((GetAsyncKeyState(VK_LEFT) & 0x8000) != 0)
 		{
-			/*MessageBoxA
-			(
-				myDlg->GetSafeHwnd(),
-				"Arrow Left was pressed!",
-				"Key from thread",
-				MB_OK | MB_ICONERROR
-			);*/
 			std::string temp = "KEY THREAD " + std::to_string(static_cast<long double>(i++));
 
 			SetDlgItemTextA(myDlg->GetSafeHwnd(), IDC_MAIN_WND_TEXT, temp.c_str());
@@ -97,7 +138,6 @@ UINT AfxKeyPressFunc(LPVOID param)
 		}
 		Sleep(10);
 	}
-	
 	
 	return 0;
 }
@@ -158,8 +198,9 @@ CWinMFCDlg::CWinMFCDlg(CWnd* pParent /*=NULL*/):
 	m_ptrDialog(NULL), 
 	m_SomeData(_T("SOME DATA"))
 	, m_ApplyNumber(FALSE)
-	, m_InputNumber(10)
-{
+	, m_InputNumber(5)
+	, m_CheckCheckboxLogic(FALSE)
+	{
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
@@ -169,6 +210,7 @@ void CWinMFCDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_MAIN_WND_TEXT, m_SomeData);
 	DDX_Control(pDX, IDC_MAIN_WND_SHOW_CUSTOM_DIALOG, m_ShowCustomDlgBtn);
 	DDX_Check(pDX, IDC_CHECK_APPLY_NUMBER, m_ApplyNumber);
+	DDX_Check(pDX, IDC_CHECK_TEST_LOGIC, m_CheckCheckboxLogic);
 	DDX_Text(pDX, IDC_EDIT_INPUT_NUMBER, m_InputNumber);
 	DDX_Control(pDX, IDC_SPIN_SET_NUMBER, m_SpinControl);
 }
@@ -192,6 +234,10 @@ BEGIN_MESSAGE_MAP(CWinMFCDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_MAIN_WND_STOP_AFX, OnBnClickedMainWndStopAfx)
 	ON_BN_CLICKED(IDC_MAIN_WND_DO_INI, OnBnClickedMainWndDoIni)
 	ON_EN_UPDATE(IDC_EDIT_DOUBLE, OnEnUpdateEditDouble)
+	ON_BN_CLICKED(IDC_CHECK_TEST_LOGIC, &CWinMFCDlg::OnBnClickedCheckTestLogic)
+	ON_EN_SETFOCUS(IDC_EDIT_NUMBER, &CWinMFCDlg::OnEnSetfocusEditNumber)
+	ON_EN_CHANGE(IDC_EDIT_NUMBER, &CWinMFCDlg::OnEnChangeEditNumber)
+	ON_EN_KILLFOCUS(IDC_EDIT_NUMBER, &CWinMFCDlg::OnEnKillfocusEditNumber)
 END_MESSAGE_MAP()
 
 // обработчики сообщений CWinMFCDlg
@@ -232,21 +278,15 @@ BOOL CWinMFCDlg::OnInitDialog()
 	m_ShowCustomDlgBtn.EnableWindowsTheming(FALSE);
 	m_ShowCustomDlgBtn.SetFaceColor(RGB(0, 255, 0));
 
-	if (RegisterHotKey(
-		this->m_hWnd,
-		1,
-		MOD_ALT | MOD_CONTROL | MOD_NOREPEAT,
-		'B'))
-	{
-		MessageBoxA(
-			NULL,
-			"Hotkey 'CTRL+ALT+B' registered, using MOD_NOREPEAT flag",
-			"HOTKEY REG COMBINATION",
-			MB_OKCANCEL | MB_ICONASTERISK);
-	}
+	SetDlgItemInt(IDC_EDIT_INPUT_NUMBER, 10);
 
-	SetDlgItemInt(IDC_EDIT_INPUT_NUMBER, 10, FALSE);
 	m_SpinControl.SetRange(-10, 10);
+
+	UDACCEL accel[1];	
+	accel[0].nSec = 0; // Время задержки (в миллисекундах)
+	accel[0].nInc = 5; // Величина изменения
+
+	m_SpinControl.SetAccel(1, accel);
 
 	GetDlgItem(IDC_EDIT_INPUT_NUMBER)->EnableWindow(FALSE);
 	GetDlgItem(IDC_SPIN_SET_NUMBER)->EnableWindow(FALSE);
@@ -469,8 +509,6 @@ void CWinMFCDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 void CWinMFCDlg::OnEnUpdateEditInputNumber()
 {
 	m_InputNumber = GetDlgItemInt(IDC_EDIT_INPUT_NUMBER);
-
-	UpdateData(FALSE);
 }
 
 
@@ -674,17 +712,55 @@ void CWinMFCDlg::OnEnUpdateEditDouble()
 void CWinMFCDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: Add your message handler code here and/or call default
+	CDialogEx::OnTimer(nIDEvent);
+}
 
-	/*if ((GetAsyncKeyState(VK_LEFT) & 0x8000) != 0)
+void CWinMFCDlg::OnBnClickedCheckTestLogic()
+{
+	UpdateData(TRUE);
+
+	if (m_CheckCheckboxLogic)
 	{
 		MessageBoxA
-		(
+			(
 			this->GetSafeHwnd(),
-			"Arrow Left was pressed!",
-			"Key",
-			MB_OK | MB_ICONERROR
-		);
-	} */
+			"m_CheckCheckboxLogic is TRUE!",
+			"LOGIC",
+			MB_OK | MB_ICONINFORMATION
+			);
+	} 
+	else
+	{
+		MessageBoxA
+			(
+			this->GetSafeHwnd(),
+			"m_CheckCheckboxLogic is FALSE!",
+			"LOGIC",
+			MB_OK | MB_ICONINFORMATION
+			);
+	}
+	
+}
 
-	CDialogEx::OnTimer(nIDEvent);
+
+void CWinMFCDlg::OnEnSetfocusEditNumber()
+{
+}
+
+
+void CWinMFCDlg::OnEnChangeEditNumber()
+{
+
+}
+
+
+void CWinMFCDlg::OnEnKillfocusEditNumber()
+{
+	MessageBoxA
+		(
+		this->GetSafeHwnd(),
+		"Field not in focus!",
+		"MSG",
+		MB_OK | MB_ICONINFORMATION
+		);
 }

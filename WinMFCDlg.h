@@ -112,4 +112,12 @@ public:
 	afx_msg void OnBnClickedMainWndDoIni();
 	afx_msg void OnEnUpdateEditDouble();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+private:
+	// Simple variable to see how UpdateData works on checkbox
+	BOOL m_CheckCheckboxLogic;
+public:
+	afx_msg void OnBnClickedCheckTestLogic();
+	afx_msg void OnEnSetfocusEditNumber();
+	afx_msg void OnEnChangeEditNumber();
+	afx_msg void OnEnKillfocusEditNumber();
 };
